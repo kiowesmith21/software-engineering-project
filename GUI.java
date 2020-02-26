@@ -13,7 +13,7 @@ public class GUI {
 */
    public static void main(String[] args)
    {
-/*	   
+	   
 	   //---------------------------------- New User
 	   
 	   JFrame WelcomeFrame = new JFrame();
@@ -39,6 +39,7 @@ public class GUI {
 	   
 	   
 	   //---------------------------------- Existing user
+	      
       JFrame LoginFrame = new JFrame();
       JLabel login = new JLabel("  Logging into to Cloud System!");
       JLabel clientUser = new JLabel("                    Are you a Client or a User?                   ");
@@ -64,6 +65,15 @@ public class GUI {
 
       LoginFrame.setVisible(true);
       
-     //----------------------------------------------------
-  */ }
+     //------------------------------------ Create Account
+      
+      
+     //------------------------------------ Client Actions
+      
+      
+     //------------------------------------ User Actions
+
+
+      
+   }
 }
