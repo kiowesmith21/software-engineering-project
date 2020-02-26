@@ -1,79 +1,107 @@
+package main;
+import java.awt.BorderLayout;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import main.App.InputHandler;
+
+
+
 
 public class GUI {
 
 /**
    This program shows a frame that is filled with two components.
 */
-   public static void main(String[] args)
-   {
-	   
-	   //---------------------------------- New User
-	   
-	   JFrame WelcomeFrame = new JFrame();
-	      JLabel intro = new JLabel("                            Welcome to the Matrix!                           ");
+	
+	//class fields ONLY NEEDS ONE WINDOW/JFRAME
+	JFrame window;
+	
+	//Welcome Panel, USE PANELS WHEN YOUR WANT TO CREATE NEW PAGES (NOT ENTIRE JFrames)
+	JPanel welcomePanel;
+	JButton clientButton;
+	JButton ownerButton;
+	JLabel clientUser;
+	JLabel login;
+	
+	//Client Panel
+	JPanel clientPanel;
+	JTextField clientIDField;
+	//add more components
+	JButton clientSubmit;
+	
+	//Owner Panel
+	JPanel ownerPanel;
+	JTextField ownerIDField;
+	//add more components
+	JButton ownerSubmit;
+	
+	public void createGUI(InputHandler iHandler) {  
+		  
+		//initialize everything
+	      window = new JFrame();
+	      login = new JLabel("  Logging into to Cloud System!");
+	      clientUser = new JLabel("                    Are you a Client or a User?                   ");
 
-	      JButton signInButton = new JButton("Sign in");
-	      JButton signUpButton = new JButton("Sign up");
-
-	      JPanel introPanel = new JPanel();
-	      introPanel.add(intro);
-	      introPanel.add(signInButton);
-	      introPanel.add(signUpButton);
-	      WelcomeFrame.add(introPanel);
-
-	      final int IntroFRAME_WIDTH = 300;
-	      final int IntroFRAME_HEIGHT = 150;
-	      WelcomeFrame.setSize(IntroFRAME_WIDTH, IntroFRAME_HEIGHT);
-	      WelcomeFrame.setTitle("The Matrix");
-	      WelcomeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-	      WelcomeFrame.setVisible(true);
-	   
-	   
-	   
-	   //---------------------------------- Existing user
+	      ownerButton = new JButton("Owner");
+	      ownerButton.addActionListener(iHandler);
+	      ownerButton.setActionCommand("owner");
 	      
-      JFrame LoginFrame = new JFrame();
-      JLabel login = new JLabel("  Logging into to Cloud System!");
-      JLabel clientUser = new JLabel("                    Are you a Client or a User?                   ");
-      //JTextField text = new JTextField(4);
-      
+	      clientButton = new JButton("Client");
+	      clientButton.addActionListener(iHandler);
+	      clientButton.setActionCommand("client");
+	      
+	      welcomePanel = new JPanel();
+	      welcomePanel.add(login);
+	      welcomePanel.add(clientUser);
+	      welcomePanel.add(ownerButton);
+	      welcomePanel.add(clientButton);
+	      
+	      //add welcome panel
+	      window.add(welcomePanel);
 
-      JButton userButton = new JButton("User!");
-      JButton clientButton = new JButton("Client!");
+	     
+	      
+	     //------------------------------------ Client Action Panel
+	      clientPanel = new JPanel();
+	    //set panel's layout to border layout
+	      clientPanel.setLayout(new BorderLayout());
+	      clientIDField = new JTextField();
+	      clientSubmit = new JButton("Submit");
+	      
+	      
+	      //add components to clientPanel
+	      clientPanel.add(clientIDField, BorderLayout.NORTH);
+	      clientPanel.add(clientSubmit, BorderLayout.SOUTH);
+	      
+	      
+	     //------------------------------------ Owner Action Panel
+	     ownerPanel = new JPanel();
+	   //set panel's layout to border layout
+	      ownerPanel.setLayout(new BorderLayout());
+	     ownerIDField = new JTextField();
+	     ownerSubmit = new JButton("Submit");
+	     
+	     
+	     //add components to ownerPanel
+	     ownerPanel.add(ownerIDField, BorderLayout.NORTH);
+	     ownerPanel.add(ownerSubmit, BorderLayout.SOUTH);
+	     
+	     
+	     //THIS NEEDS TO BE AT THE BOTTOM
+	     final int FRAME_WIDTH = 800;
+	      final int FRAME_HEIGHT = 600;
+	      window.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+	      window.setTitle("The Matrix");
+	      window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	      window.setLocationRelativeTo(null);
 
-      JPanel panel = new JPanel();
-      panel.add(login);
-      panel.add(clientUser);
-      panel.add(userButton);
-      panel.add(clientButton);
-      //panel.add(text);
-      LoginFrame.add(panel);
+	      window.setVisible(true);
 
-      final int FRAME_WIDTH = 300;
-      final int FRAME_HEIGHT = 150;
-      LoginFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-      LoginFrame.setTitle("The Matrix");
-      LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-      LoginFrame.setVisible(true);
-      
-     //------------------------------------ Create Account
-      
-      
-     //------------------------------------ Client Actions
-      
-      
-     //------------------------------------ User Actions
-
-
-      
-   }
+	}
+	
 }
