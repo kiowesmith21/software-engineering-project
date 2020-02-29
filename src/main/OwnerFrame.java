@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+
 import java.io.PrintStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,6 +30,7 @@ public class OwnerFrame extends JFrame {
 	private JLabel vehicleDurationLabel;
 	private JTextField vehicleDurationField;
 	private JButton submitButton;
+	private JButton backButton;                                                                                                                              
 	
 	public OwnerFrame() {
 		
@@ -60,6 +62,11 @@ public class OwnerFrame extends JFrame {
 		vehicleDurationField.setText("");
 	}
 	
+	public void closeFrame() {
+		this.setVisible(false); //you can't see me!
+		this.dispose(); 
+	}
+	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			PrintStream output;
@@ -83,10 +90,25 @@ public class OwnerFrame extends JFrame {
 		}
 	}
 	
+	class BackListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			closeFrame();
+			JFrame frame = new WelcomeFrame();
+			frame.setLayout(new GridLayout(2,1));
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setVisible(true);
+		}
+	}
+	
+	
 	private void createButton() {
 		submitButton = new JButton("Submit");
 		ActionListener listener = new SubmitListener();
 		submitButton.addActionListener(listener);
+		
+		backButton = new JButton("Back");
+		ActionListener backListener = new BackListener();
+		backButton.addActionListener(backListener);
 	}
 	
 	private void createPanel() {
@@ -98,6 +120,7 @@ public class OwnerFrame extends JFrame {
 		panel.add(vehicleDurationLabel);
 		panel.add(vehicleDurationField);
 		panel.add(submitButton);
+		panel.add(backButton);
 		this.add(panel);
 	}
 	
