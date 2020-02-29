@@ -29,7 +29,6 @@ public class WelcomeFrame extends JFrame {
 		
 		this.setLayout(new GridLayout(2,1));
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setVisible(true);
 	}
 	
