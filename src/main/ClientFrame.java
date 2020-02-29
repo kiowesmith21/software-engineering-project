@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.sql.Timestamp;
 
 public class ClientFrame extends JFrame {
+	
 	public static final int FRAME_WIDTH = 500;
 	private static final int FRAME_HEIGHT = 400;
 	
@@ -31,10 +32,11 @@ public class ClientFrame extends JFrame {
 	private JLabel jobDeadlineLabel;
 	private JTextField jobDeadlineField;
 	private JButton submitButton;
+	private JButton backButton;
 	public ClientFrame() {
 		
 		this.createTextFields();
-		this.createButton();
+		this.createButtons();
 		this.createPanel();
 		
 		this.setLayout(new GridLayout(2,1));
@@ -64,6 +66,11 @@ public class ClientFrame extends JFrame {
 		jobDeadlineField.setText("");
 	}
 	
+	public void closeFrame() {
+		this.setVisible(false); //you can't see me!
+		this.dispose(); 
+	}
+	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			PrintStream output;
@@ -88,10 +95,25 @@ public class ClientFrame extends JFrame {
 		}
 	}
 	
-	private void createButton() {
+	class BackListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			closeFrame();
+			JFrame frame = new WelcomeFrame();
+			frame.setLayout(new GridLayout(2,1));
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setVisible(true);
+		}
+	}
+	
+	private void createButtons() {
 		submitButton = new JButton("Submit");
-		ActionListener listener = new SubmitListener();
-		submitButton.addActionListener(listener);
+		ActionListener submitListener = new SubmitListener();
+		submitButton.addActionListener(submitListener);
+		
+		backButton = new JButton("Back");
+		ActionListener backListener = new BackListener();
+		backButton.addActionListener(backListener);
+		
 	}
 	
 	private void createPanel() {
@@ -105,6 +127,7 @@ public class ClientFrame extends JFrame {
 		panel.add(jobDeadlineLabel);
 		panel.add(jobDeadlineField);
 		panel.add(submitButton);
+		panel.add(backButton);
 		this.add(panel);
 	}
 	

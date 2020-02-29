@@ -34,7 +34,7 @@ public class WelcomeFrame extends JFrame {
 	
 	class ClientButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			closeWelcomeFrame();
+			closeFrame();
 			JFrame frame = new ClientFrame();
 			frame.setLayout(new GridLayout(2,1));
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +44,7 @@ public class WelcomeFrame extends JFrame {
 	
 	class OwnerButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			closeWelcomeFrame();
+			closeFrame();
 			JFrame frame = new OwnerFrame();
 			frame.setLayout(new GridLayout(2,1));
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,7 +52,7 @@ public class WelcomeFrame extends JFrame {
 		}
 	}
 	
-	public void closeWelcomeFrame() {
+	public void closeFrame() {
 		this.setVisible(false); //you can't see me!
 		this.dispose(); 
 	}
