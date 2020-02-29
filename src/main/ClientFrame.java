@@ -105,7 +105,7 @@ public class ClientFrame extends JFrame {
 		panel.add(jobDeadlineLabel);
 		panel.add(jobDeadlineField);
 		panel.add(submitButton);
-		add(panel);
+		this.add(panel);
 	}
 	
 }

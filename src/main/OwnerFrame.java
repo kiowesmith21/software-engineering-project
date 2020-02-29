@@ -98,7 +98,7 @@ public class OwnerFrame extends JFrame {
 		panel.add(vehicleDurationLabel);
 		panel.add(vehicleDurationField);
 		panel.add(submitButton);
-		add(panel);
+		this.add(panel);
 	}
 	
 }
