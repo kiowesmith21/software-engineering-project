@@ -53,7 +53,7 @@ public class WelcomeFrame extends JFrame {
 	}
 	
 	public void closeFrame() {
-		this.setVisible(false); //you can't see me!
+		this.setVisible(false);
 		this.dispose(); 
 	}
 
