@@ -10,7 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import java.io.*;
+import java.io.PrintStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.*;
 import java.sql.Timestamp;
 
@@ -55,7 +59,22 @@ public class ClientFrame extends JFrame {
 	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			System.out.println("CLIENT ID: " + jobIdField.getText());
+			PrintStream output;
+			try {
+				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
+				String toAppend = String.format("%s,%s,%s,%s\n",
+						clientIdField.getText(),
+						 jobIdField.getText(),
+						 jobDurationField.getText(),
+						 jobDeadlineField.getText()
+						 );
+				output.append(toAppend);
+				output.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 	}
 	
