@@ -19,9 +19,6 @@ public class ClientFrame extends JFrame {
 	
 	public static final int FRAME_WIDTH = 500;
 	private static final int FRAME_HEIGHT = 400;
-	
-//	private static final double DEFAULT_RATE = 5;
-//	private static final double INITIAL_BALANCE = 1000;   
 
 	private JLabel clientIdLabel;
 	private JTextField clientIdField;
@@ -67,7 +64,7 @@ public class ClientFrame extends JFrame {
 	}
 	
 	public void closeFrame() {
-		this.setVisible(false); //you can't see me!
+		this.setVisible(false);
 		this.dispose(); 
 	}
 	
