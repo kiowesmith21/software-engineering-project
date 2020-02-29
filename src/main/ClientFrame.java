@@ -11,11 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.io.PrintStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.util.*;
 import java.sql.Timestamp;
 
 public class ClientFrame extends JFrame {
@@ -36,11 +33,14 @@ public class ClientFrame extends JFrame {
 	private JButton submitButton;
 	public ClientFrame() {
 		
-		createTextFields();
-		createButton();
-		createPanel();
+		this.createTextFields();
+		this.createButton();
+		this.createPanel();
 		
-		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setLayout(new GridLayout(2,1));
+	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setVisible(true);
 		
 	}
 	
@@ -57,19 +57,29 @@ public class ClientFrame extends JFrame {
 		
 	}
 	
+	private void clearTextFields() {
+		clientIdField.setText("");
+		jobIdField.setText("");
+		jobDurationField.setText("");
+		jobDeadlineField.setText("");
+	}
+	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			PrintStream output;
 			try {
 				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
-				String toAppend = String.format("%s,%s,%s,%s\n",
+				String toAppend = String.format("%s,%s,%s,%s,%s\n",
 						clientIdField.getText(),
 						 jobIdField.getText(),
 						 jobDurationField.getText(),
-						 jobDeadlineField.getText()
+						 jobDeadlineField.getText(),
+						 new Timestamp(System.currentTimeMillis())
 						 );
 				output.append(toAppend);
 				output.close();
+				clearTextFields();
+				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

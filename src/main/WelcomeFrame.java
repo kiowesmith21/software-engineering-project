@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -18,42 +19,56 @@ public class WelcomeFrame extends JFrame {
 	private JButton ownerButton;
 	
 	public WelcomeFrame() {
+		
+		
 		welcomeLabel = new JLabel("Welcome");
 		
-		createClientButton();
-		createOwnerButton();
-		createPanel();
+		this.createClientButton();
+		this.createOwnerButton();
+		this.createPanel();
 		
-		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setLayout(new GridLayout(2,1));
+		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setVisible(true);
 	}
 	
 	class ClientButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			
+			closeWelcomeFrame();
 			JFrame frame = new ClientFrame();
+			frame.setLayout(new GridLayout(2,1));
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    frame.setVisible(true);
 		}
 	}
 	
-//	class OwnerButtonListener implements ActionListener {
-//		public void actionPerformed(ActionEvent event) {
-//			JFrame frame = new OwnerFrame();
-//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		    frame.setVisible(true);
-//		}
-//	}
+	class OwnerButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			closeWelcomeFrame();
+			JFrame frame = new OwnerFrame();
+			frame.setLayout(new GridLayout(2,1));
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setVisible(true);
+		}
+	}
+	
+	public void closeWelcomeFrame() {
+		this.setVisible(false); //you can't see me!
+		this.dispose(); 
+	}
 
 	private void createClientButton() {
 		clientButton = new JButton("Client");
 		ActionListener listener = new ClientButtonListener();
-		
-		
+		clientButton.addActionListener(listener);
 		
 	}
 	
 	private void createOwnerButton() {
 		ownerButton = new JButton("Owner");
+		ActionListener listener = new OwnerButtonListener();
+		ownerButton.addActionListener(listener);
 		
 	}
 	

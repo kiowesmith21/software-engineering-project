@@ -29,13 +29,17 @@ public class OwnerFrame extends JFrame {
 	private JLabel vehicleDurationLabel;
 	private JTextField vehicleDurationField;
 	private JButton submitButton;
+	
 	public OwnerFrame() {
 		
-		createTextFields();
-		createButton();
-		createPanel();
+		this.createTextFields();
+		this.createButton();
+		this.createPanel();
 		
-		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setLayout(new GridLayout(2,1));
+	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setVisible(true);
 		
 	}
 	
@@ -60,8 +64,8 @@ public class OwnerFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			PrintStream output;
 			try {
-				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
-				String toAppend = String.format("%s,%s,%s,%s,%s\n",
+				output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
+				String toAppend = String.format("%s,%s,%s,%s\n",
 						ownerIdField.getText(),
 						 vehicleInfoField.getText(),
 						 vehicleDurationField.getText(),
