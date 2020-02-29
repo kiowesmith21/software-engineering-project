@@ -1,5 +1,7 @@
 .classpath
 .DS_Store
 .project
+ClientInput.txt
+OwnerInput.txt
 bin/
 src/.DS_Store
