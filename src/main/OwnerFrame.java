@@ -46,9 +46,9 @@ public class OwnerFrame extends JFrame {
 		final int FIELD_WIDTH = 10;
 		ownerIdLabel = new JLabel("Client ID: ");
 		ownerIdField = new JTextField(FIELD_WIDTH);
-		vehicleInfoLabel = new JLabel("Job ID: ");
+		vehicleInfoLabel = new JLabel("Vehicle Info: ");
 		vehicleInfoField = new JTextField(FIELD_WIDTH);
-		vehicleDurationLabel = new JLabel("Job Duration: ");
+		vehicleDurationLabel = new JLabel("Vehicle Duration: ");
 		vehicleDurationField = new JTextField(FIELD_WIDTH);
 		
 	}
