@@ -6,8 +6,5 @@ public class VehicleOwner extends User {
 		super();
 	}
 	
-	public String getName() {
-		return this.name;
-	}
 
 }
