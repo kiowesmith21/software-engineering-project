@@ -9,9 +9,11 @@ public class VehicularCloudManager {
 			v.assignJob(job);
 		}
 	}
+	
 	public Job newCheckpoint(Vehicle vehicle) {
 		return vehicle.getJob();
 	}
+	
 	public Vehicle getNewVehicle(ArrayList<Vehicle> vehicles) {
 		for(Vehicle v: vehicles) {
 			if(!v.hasJob()) {
