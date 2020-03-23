@@ -9,5 +9,9 @@ public class Vehicle {
 	VehicleOwner owner;
 	Timestamp registerTime;
 	Timestamp departureTime;
+	
+	public Job getJob() {
+		return this.job;
+	}
 
 }

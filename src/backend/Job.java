@@ -3,12 +3,20 @@ package backend;
 import java.sql.Timestamp;
 
 public class Job {
-	String id;
+	int id;
 	Timestamp registerTime;
 	Timestamp startTime;
 	Timestamp endTime;
-	int totalDuration;
+	int duration;
 	boolean isComplete;
-	int percentComplete;
+	//int percentComplete;
+	
+	public Job(int id, int duration) {
+		this.id = id;
+		this.duration = duration;
+		this.registerTime = new Timestamp(System.currentTimeMillis());
+		this.isComplete = false;
+		//this.percentComplete = 0;
+	}
 	
 }
