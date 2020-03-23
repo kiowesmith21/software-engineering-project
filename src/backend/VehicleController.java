@@ -3,6 +3,7 @@ package backend;
 import java.util.ArrayList;
 
 public class VehicleController {
+	
 	public void addVehicle(Vehicle vehicle, ArrayList<Vehicle> vehicles) {
 		vehicles.add(vehicle);
 	}

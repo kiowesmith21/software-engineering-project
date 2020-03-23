@@ -16,7 +16,7 @@ public class Job {
 		this.duration = duration;
 		this.registerTime = new Timestamp(System.currentTimeMillis());
 		this.isComplete = false;
-		//this.percentComplete = 0;
+		this.hoursCompleted = 0;
 	}
 	
 }

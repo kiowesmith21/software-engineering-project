@@ -14,6 +14,7 @@ public class VehicularCloud {
 	UserController userController;
 	Queue<Job> jobQueue;
 	ArrayList<Vehicle> vehicles;
+	VehicularCloudManager vcm;
 	
 	public VehicularCloud() {
 		
@@ -23,6 +24,7 @@ public class VehicularCloud {
 		userController = new UserController();
 		jobQueue = new LinkedList<Job>();
 		vehicles = new ArrayList<Vehicle>();
+		vcm = new VehicularCloudManager();
 		
 	}
 	
@@ -60,31 +62,45 @@ public class VehicularCloud {
 		String input = scan.next();
 		switch (input) {
 		case "A":
-			
+			this.jobMenu();
+		case "B":
+			this.displayMainMenu();
 		}
 	}
 	
-	public Vehicle vehicleOwnerMenu() {
+	public void vehicleOwnerMenu() {
 		System.out.println("Enter the your vehicle ID: ");
 		int vehicleID = scan.nextInt();
 		System.out.println("Enter the residency time for your vehicle: ");
 		int vehicleResTime = scan.nextInt();
-		return new Vehicle(vehicleID, vehicleResTime);
+		Vehicle vehicle = new Vehicle(vehicleID, vehicleResTime);
+		this.vehicleController.addVehicle(vehicle, this.vehicles);
 		
 	}
 	
 	public void VCMMenu() {
 		System.out.println("A = Calculate the completion time for the job\n" + 
 				"B = Exit");
+		String input = scan.next();
+		switch(input) {
+		case "A":
+			System.out.print("Enter the job ID: ");
+			int id = scan.nextInt();
+			int time = vcm.calculateJobCompletionTime(id, this.jobQueue);
+			System.out.printf("The job will be completed in %s hours\n", time);
+		case "B":
+			this.displayMainMenu();
+		}
 		
 	}
 	
-	public Job jobMenu() {
+	public void jobMenu() {
 		System.out.println("Enter Job ID: ");
 		int jobID = scan.nextInt();
 		System.out.println("Enter Job Duration: ");
 		int jobDuration = scan.nextInt();
-		return new Job(jobID, jobDuration);
+		Job job = new Job(jobID, jobDuration);
+		this.jobController.addJob(job, this.jobQueue);
 	}
 
 }

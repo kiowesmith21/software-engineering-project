@@ -1,6 +1,7 @@
 package backend;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class VehicularCloudManager {
 	
@@ -24,6 +25,17 @@ public class VehicularCloudManager {
 			}
 		}
 		return null;
+	}
+	
+	public int calculateJobCompletionTime(int id, Queue<Job> jobs) {
+		int time = 0;
+		for(Job j:jobs) {
+			time += j.duration;
+			if (j.id == id) {
+				break;
+			}
+		}
+		return time;
 	}
 	
 }
