@@ -69,7 +69,7 @@ public class JobController {
 	 * @param id id of the job to search for
 	 * @return the Job object
 	 */
-	public Job findJob(Queue<Job> jobs, int id) {
+	public Job findJob(int id, Queue<Job> jobs) {
 		for(Job j: jobs) {
 			if(j.id == id) {
 				return j;
