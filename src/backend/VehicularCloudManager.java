@@ -12,8 +12,16 @@ public class VehicularCloudManager {
 	public Job newCheckpoint(Vehicle vehicle) {
 		return vehicle.getJob();
 	}
-	public Vehicle getNewVehicle() {
-		
+	public Vehicle getNewVehicle(ArrayList<Vehicle> vehicles) {
+		for(Vehicle v: vehicles) {
+			if(!v.hasJob()) {
+				continue;
+			}
+			else {
+				return v;
+			}
+		}
+		return null;
 	}
 	
 }

@@ -9,7 +9,7 @@ public class Job {
 	Timestamp endTime;
 	int duration;
 	boolean isComplete;
-	//int percentComplete;
+	int hoursCompleted;
 	
 	public Job(int id, int duration) {
 		this.id = id;

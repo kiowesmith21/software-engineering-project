@@ -3,7 +3,6 @@ package backend;
 public class JobController {
 	
 	
-	
 	public void addJob(Job job) {
 		
 	}

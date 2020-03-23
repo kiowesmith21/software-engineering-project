@@ -24,5 +24,14 @@ public class Vehicle {
 	public Job getJob() {
 		return this.job;
 	}
+	
+	public boolean hasJob() {
+		if(this.job == null) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
 }

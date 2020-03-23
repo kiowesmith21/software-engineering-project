@@ -1,6 +1,10 @@
 package backend;
 
 import java.util.Scanner;
+import java.util.Queue; 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 
 public class VehicularCloud {
 	
@@ -8,12 +12,18 @@ public class VehicularCloud {
 	VehicleController vehicleController;
 	JobController jobController;
 	UserController userController;
+	Queue<Job> jobQueue;
+	ArrayList<Vehicle> vehicles;
 	
 	public VehicularCloud() {
+		
 		scan = new Scanner(System.in);
 		vehicleController = new VehicleController();
 		jobController = new JobController();
 		userController = new UserController();
+		jobQueue = new LinkedList<Job>();
+		vehicles = new ArrayList<Vehicle>();
+		
 	}
 	
 	public static void main(String[] args) {
