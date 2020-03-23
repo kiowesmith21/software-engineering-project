@@ -54,9 +54,12 @@ public class VehicularCloud {
 		}
 	}
 	
-	public void vehicleOwnerMenu() {
+	public Vehicle vehicleOwnerMenu() {
 		System.out.println("Enter the your vehicle ID: ");
+		int vehicleID = scan.nextInt();
 		System.out.println("Enter the residency time for your vehicle: ");
+		int vehicleResTime = scan.nextInt();
+		return new Vehicle(vehicleID, vehicleResTime);
 		
 	}
 	

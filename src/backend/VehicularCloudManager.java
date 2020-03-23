@@ -3,8 +3,11 @@ package backend;
 import java.util.ArrayList;
 
 public class VehicularCloudManager {
+	
 	public void assignJob (Job job, ArrayList<Vehicle> vehicles) {
-		
+		for(Vehicle v: vehicles) {
+			v.assignJob(job);
+		}
 	}
 	public Job newCheckpoint(Vehicle vehicle) {
 		return vehicle.getJob();
@@ -12,4 +15,5 @@ public class VehicularCloudManager {
 	public Vehicle getNewVehicle() {
 		
 	}
+	
 }

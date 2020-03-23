@@ -11,6 +11,6 @@ public class VehicleController {
 		
 	}
 	public Job createCheckpoint(Vehicle vehicle) {
-		
+		return vehicle.job;
 	}
 }
