@@ -1,6 +1,7 @@
 package backend;
 
 import java.util.Scanner;
+
 import java.util.Queue; 
 import java.util.LinkedList;
 import java.util.HashMap;
@@ -36,9 +37,28 @@ public class VehicularCloud {
 	}
 	
 	public static void main(String[] args) {
-		VehicularCloud vc = new VehicularCloud();
-		vc.displayMainMenu();
+		//UNcomment this part AND comment out the Testing part to run actual program
+		//VehicularCloud vc = new VehicularCloud(); 
+		//vc.displayMainMenu();
 		
+		//TESTING: Comment out if using actual program
+		//JUnit Testing UserController
+		UserControllerTest ucTest = new UserControllerTest();
+		ucTest.testAddClient();
+		ucTest.testAddVehicleOwner();
+		
+		//JUnit Testing JobController
+		JobControllerTest jcTest = new JobControllerTest();
+		jcTest.testAddJob();
+		jcTest.testStartJob();
+		jcTest.TestEraseJob();
+		
+		//JUnit Testing VehicleController
+		VehicleControllerTest vcTest = new VehicleControllerTest();
+		vcTest.testAddVehicle();
+		vcTest.testRemoveVehicle();
+		vcTest.testVehicleExists();
+		vcTest.testCreateCheckpoint();
 	}
 	
 	/**
@@ -138,7 +158,7 @@ public class VehicularCloud {
 				System.out.println("job does not exist.");
 				break;
 			}
-			else {
+			else { 
 			int time = vcm.calculateJobCompletionTime(id, this.jobQueue);
 			System.out.printf("The job will be completed in %s hours\n", time);
 			}
