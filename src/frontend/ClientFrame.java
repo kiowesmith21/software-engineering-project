@@ -30,6 +30,7 @@ public class ClientFrame extends JFrame {
 	private JTextField jobDeadlineField;
 	private JButton submitButton;
 	private JButton backButton;
+	
 	public ClientFrame() {
 		
 		this.createTextFields();
@@ -39,6 +40,7 @@ public class ClientFrame extends JFrame {
 		this.setLayout(new GridLayout(2,1));
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
 	}

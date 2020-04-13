@@ -38,6 +38,7 @@ public class OwnerFrame extends JFrame {
 		this.setLayout(new GridLayout(2,1));
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
 	}
