@@ -44,7 +44,7 @@ public class OwnerFrame extends JFrame {
 	
 	private void createTextFields() {
 		final int FIELD_WIDTH = 10;
-		ownerIdLabel = new JLabel("Client ID: ");
+		ownerIdLabel = new JLabel("Owner ID: ");
 		ownerIdField = new JTextField(FIELD_WIDTH);
 		vehicleInfoLabel = new JLabel("Vehicle Info: ");
 		vehicleInfoField = new JTextField(FIELD_WIDTH);
