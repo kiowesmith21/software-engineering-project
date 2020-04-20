@@ -4,13 +4,12 @@ import javax.swing.JFrame;
 
 public class UserConsole {
 	
+	static JFrame frame;
+	
 	public static void main(String[] args) {
-		try {
-			JFrame frame = new WelcomeFrame();
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
+		
+		frame = new WelcomeFrame();
+
 	}
 
 }

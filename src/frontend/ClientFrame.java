@@ -16,7 +16,9 @@ import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import java.net.Socket;
+import java.net.ConnectException;
 
 import java.sql.Timestamp;
 
@@ -50,12 +52,17 @@ public class ClientFrame extends JFrame {
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		
-		socket = new Socket("localhost", 9806);
-		inputStream = new DataInputStream(socket.getInputStream());
-		outputStream = new DataOutputStream(socket.getOutputStream());
-
+		try {
+			socket = new Socket("localhost", 9806);
+			inputStream = new DataInputStream(socket.getInputStream());
+			outputStream = new DataOutputStream(socket.getOutputStream());
+		}
+		catch (Exception e) {
+			this.closeFrame();
+			JFrame errorFrame = new ErrorFrame(e.toString());
+		}
 		
 	}
 	

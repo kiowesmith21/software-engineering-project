@@ -33,6 +33,7 @@ public class WelcomeFrame extends JFrame {
 		this.setLayout(new GridLayout(2,1));
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
 	
@@ -41,9 +42,9 @@ public class WelcomeFrame extends JFrame {
 			closeFrame();
 			try {
 				JFrame frame = new ClientFrame();
-				frame.setLayout(new GridLayout(2,1));
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			    frame.setVisible(true);
+//				frame.setLayout(new GridLayout(2,1));
+//				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//			    frame.setVisible(true);
 			}
 			catch (IOException e) {
 				
@@ -55,9 +56,9 @@ public class WelcomeFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
 			JFrame frame = new OwnerFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);
+//			frame.setLayout(new GridLayout(2,1));
+//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		    frame.setVisible(true);
 		}
 	}
 	
@@ -109,6 +110,6 @@ public class WelcomeFrame extends JFrame {
 		panel.add(clientButton);
 		panel.add(ownerButton);
 //		panel.add(vcmButton);
-		add(panel);
+		this.add(panel);
 	}
 }
