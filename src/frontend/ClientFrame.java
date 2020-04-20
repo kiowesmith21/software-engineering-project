@@ -11,8 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import java.io.PrintStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+
 import java.sql.Timestamp;
 
 public class ClientFrame extends JFrame {
@@ -31,8 +36,12 @@ public class ClientFrame extends JFrame {
 	private JButton submitButton;
 	private JButton backButton;
 	
-	public ClientFrame() {
-		
+	Socket socket;
+	DataInputStream inputStream;
+	DataOutputStream outputStream;
+	
+	public ClientFrame() throws IOException {
+				
 		this.createTextFields();
 		this.createButtons();
 		this.createPanel();
@@ -42,6 +51,11 @@ public class ClientFrame extends JFrame {
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+		
+		socket = new Socket("localhost", 9806);
+		inputStream = new DataInputStream(socket.getInputStream());
+		outputStream = new DataOutputStream(socket.getOutputStream());
+
 		
 	}
 	
@@ -74,19 +88,27 @@ public class ClientFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			PrintStream output;
 			try {
-				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
-				String toAppend = String.format("%s,%s,%s,%s,%s\n",
+				String jobInfo = String.format("%s,%s,%s,%s,%s\n",
 						clientIdField.getText(),
 						 jobIdField.getText(),
 						 jobDurationField.getText(),
 						 jobDeadlineField.getText(),
 						 new Timestamp(System.currentTimeMillis())
 						 );
-				output.append(toAppend);
-				output.close();
+				outputStream.writeUTF(jobInfo);
+//				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
+//				String toAppend = String.format("%s,%s,%s,%s,%s\n",
+//						clientIdField.getText(),
+//						 jobIdField.getText(),
+//						 jobDurationField.getText(),
+//						 jobDeadlineField.getText(),
+//						 new Timestamp(System.currentTimeMillis())
+//						 );
+//				output.append(toAppend);
+//				output.close();
 				clearTextFields();
 				
-			} catch (FileNotFoundException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

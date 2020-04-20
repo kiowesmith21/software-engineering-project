@@ -3,6 +3,8 @@ package frontend;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,10 +39,15 @@ public class WelcomeFrame extends JFrame {
 	class ClientButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
-			JFrame frame = new ClientFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);
+			try {
+				JFrame frame = new ClientFrame();
+				frame.setLayout(new GridLayout(2,1));
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    frame.setVisible(true);
+			}
+			catch (IOException e) {
+				
+			}
 		}
 	}
 	
@@ -57,10 +64,16 @@ public class WelcomeFrame extends JFrame {
 	class VCMButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
-			JFrame frame = new VCMFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);
+			try {
+				JFrame frame = new VCMFrame();
+				frame.setLayout(new GridLayout(2,1));
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    frame.setVisible(true);
+			}
+			catch (IOException e) {
+				
+			}
+			
 		}
 	}
 	
@@ -95,7 +108,7 @@ public class WelcomeFrame extends JFrame {
 		panel.add(welcomeLabel);
 		panel.add(clientButton);
 		panel.add(ownerButton);
-		panel.add(vcmButton);
+//		panel.add(vcmButton);
 		add(panel);
 	}
 }
