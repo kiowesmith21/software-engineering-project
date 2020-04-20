@@ -2,12 +2,17 @@ package frontend;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.GridLayout;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,21 +32,23 @@ public class VCMFrame extends JFrame {
 	public static final int FRAME_WIDTH = 500;
 	private static final int FRAME_HEIGHT = 400; 
 	
+	private String clientInput;
+	private String ownerInput;
+	
 	//private JLabel VCMLabel;
 	private JLabel jobInfoLabel;
-	//private JLabel CarInfoLabel;
+	//private JLabel carInfoLabel;
 	private JButton backButton;
 	private JButton confirmButton;
 	private JButton declineButton;
 	private JButton searchJobButton;
 	private JTextArea jobInfo;
-	//private JTextArea CarInfo;
+	//private JTextArea carInfo;
 	
 	ServerSocket serverSocket;
 	Socket socket;
 	DataInputStream inputStream;
 	DataOutputStream outputStream;
-
 	
 	
 	public VCMFrame() throws IOException {
@@ -60,7 +67,7 @@ public class VCMFrame extends JFrame {
 		outputStream = new DataOutputStream(socket.getOutputStream());
 		
 		while(true) {
-			String clientInput = inputStream.readUTF();
+			this.clientInput = inputStream.readUTF();
 			jobInfo.setText(clientInput);
 			System.out.println(clientInput);
 		}
@@ -72,10 +79,10 @@ public class VCMFrame extends JFrame {
 		//VCMLabel = new JLabel("VCM Manager View");
 		jobInfoLabel = new JLabel("Job/Car Information:");
 		jobInfo = new JTextArea(30,60);
-		//CarInfoLabel = new JLabel("Car Information:");
-		//CarInfo = new JTextArea(30,60);
+		//carInfoLabel = new JLabel("Car Information:");
+		//carInfo = new JTextArea(30,60);
 		//JScrollPane scrollPane = new JScrollPane(jobInfo); 
-		//jobInfo.setEditable(false);
+		jobInfo.setEditable(false);
 	}
 	
 	
@@ -87,8 +94,8 @@ public class VCMFrame extends JFrame {
 		panel.add(jobInfo);
 		panel.add(confirmButton);
 		panel.add(declineButton);
-		//panel.add(CarInfoLabel);
-		//panel.add(CarInfo);
+		//panel.add(carInfoLabel);
+		//panel.add(carInfo);
 		panel.add(searchJobButton);
 		panel.add(backButton);
 		this.add(panel);}
@@ -102,14 +109,33 @@ public class VCMFrame extends JFrame {
 		this.dispose(); 
 	}
 	
+	class confirmListener implements ActionListener {
+		
+		PrintStream output;
+		
+		public void actionPerformed(ActionEvent event) {
+			try {
+				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
+				output.append(clientInput);
+				output.close();
+				outputStream.writeUTF("confirmed");
+			}
+			catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+	}
 	
 	class BackListener implements ActionListener {
+		
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
 			JFrame frame = new WelcomeFrame();
 			frame.setLayout(new GridLayout(2,1));
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);}
+		    frame.setVisible(true);
+		    }
+		
 		}
 	
 	private void createButtons() {
@@ -128,8 +154,4 @@ public class VCMFrame extends JFrame {
 		
 	}
 	
-//	private void getjobInfo() throws IOException {
-//		String jobInfoIn = inputStream.readUTF();
-//	}
-
 }
