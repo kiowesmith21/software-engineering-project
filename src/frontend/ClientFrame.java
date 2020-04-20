@@ -4,23 +4,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
+import java.io.PrintStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import java.net.Socket;
+
+import java.sql.Timestamp;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import java.io.PrintStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.net.Socket;
-import java.net.ConnectException;
-
-import java.sql.Timestamp;
 
 public class ClientFrame extends JFrame {
 	
@@ -93,9 +90,8 @@ public class ClientFrame extends JFrame {
 	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			PrintStream output;
 			try {
-				String jobInfo = String.format("%s,%s,%s,%s,%s\n",
+				String jobInfo = String.format("JOB:%s,%s,%s,%s,%s\n",
 						clientIdField.getText(),
 						 jobIdField.getText(),
 						 jobDurationField.getText(),
@@ -103,7 +99,7 @@ public class ClientFrame extends JFrame {
 						 new Timestamp(System.currentTimeMillis())
 						 );
 				outputStream.writeUTF(jobInfo);
-//				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
+//				PrintStream output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
 //				String toAppend = String.format("%s,%s,%s,%s,%s\n",
 //						clientIdField.getText(),
 //						 jobIdField.getText(),

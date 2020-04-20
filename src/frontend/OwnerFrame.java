@@ -4,17 +4,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
+import java.io.PrintStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+import java.net.Socket;
+
+import java.sql.Timestamp;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
-import java.io.PrintStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.sql.Timestamp;
 
 public class OwnerFrame extends JFrame {
 	public static final int FRAME_WIDTH = 500;
@@ -27,12 +32,16 @@ public class OwnerFrame extends JFrame {
 	private JLabel vehicleDurationLabel;
 	private JTextField vehicleDurationField;
 	private JButton submitButton;
-	private JButton backButton;                                                                                                                              
+	private JButton backButton;                  
+	
+	Socket socket;
+	DataInputStream inputStream;
+	DataOutputStream outputStream;
 	
 	public OwnerFrame() {
 		
 		this.createTextFields();
-		this.createButton();
+		this.createButtons();
 		this.createPanel();
 		
 		this.setLayout(new GridLayout(2,1));
@@ -41,6 +50,16 @@ public class OwnerFrame extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
+		
+		try {
+			socket = new Socket("localhost", 9806);
+			inputStream = new DataInputStream(socket.getInputStream());
+			outputStream = new DataOutputStream(socket.getOutputStream());
+		}
+		catch (Exception e) {
+			this.closeFrame();
+			JFrame errorFrame = new ErrorFrame(e.toString());
+		}
 		
 	}
 	
@@ -68,20 +87,26 @@ public class OwnerFrame extends JFrame {
 	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			PrintStream output;
 			try {
-				output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
-				String toAppend = String.format("%s,%s,%s,%s\n",
+				String carInfo = String.format("CAR:%s,%s,%s,%s\n",
 						ownerIdField.getText(),
 						 vehicleInfoField.getText(),
 						 vehicleDurationField.getText(),
 						 new Timestamp(System.currentTimeMillis())
 						 );
-				output.append(toAppend);
-				output.close();
+				outputStream.writeUTF(carInfo);
+//				PrintStream output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
+//				String toAppend = String.format("%s,%s,%s,%s\n",
+//						ownerIdField.getText(),
+//						 vehicleInfoField.getText(),
+//						 vehicleDurationField.getText(),
+//						 new Timestamp(System.currentTimeMillis())
+//						 );
+//				output.append(toAppend);
+//				output.close();
 				clearTextFields();
 				
-			} catch (FileNotFoundException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -100,7 +125,7 @@ public class OwnerFrame extends JFrame {
 	}
 	
 	
-	private void createButton() {
+	private void createButtons() {
 		submitButton = new JButton("Submit");
 		ActionListener listener = new SubmitListener();
 		submitButton.addActionListener(listener);

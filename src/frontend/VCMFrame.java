@@ -37,13 +37,15 @@ public class VCMFrame extends JFrame {
 	
 	//private JLabel VCMLabel;
 	private JLabel jobInfoLabel;
-	//private JLabel carInfoLabel;
+	private JLabel carInfoLabel;
 	private JButton backButton;
-	private JButton confirmButton;
-	private JButton declineButton;
+	private JButton confirmJobButton;
+	private JButton declineJobButton;
+	private JButton confirmCarButton;
+	private JButton declineCarButton;
 	private JButton searchJobButton;
 	private JTextArea jobInfo;
-	//private JTextArea carInfo;
+	private JTextArea carInfo;
 	
 	ServerSocket serverSocket;
 	Socket socket;
@@ -67,9 +69,16 @@ public class VCMFrame extends JFrame {
 		outputStream = new DataOutputStream(socket.getOutputStream());
 		
 		while(true) {
-			this.clientInput = inputStream.readUTF();
-			jobInfo.setText(clientInput);
-			System.out.println(clientInput);
+			String in = inputStream.readUTF();
+			if (in.substring(0,4).equals("JOB:")) {
+				this.clientInput = in.substring(4,in.length()-1);
+				jobInfo.setText(clientInput);
+				System.out.println(clientInput);
+			}
+			else {
+				this.ownerInput = in.substring(4,in.length()-1);
+				carInfo.setText(ownerInput);
+			}
 		}
 		
 	}
@@ -77,12 +86,13 @@ public class VCMFrame extends JFrame {
 	private void createTextFields() {
 		//final int FIELD_WIDTH = 10;
 		//VCMLabel = new JLabel("VCM Manager View");
-		jobInfoLabel = new JLabel("Job/Car Information:");
+		jobInfoLabel = new JLabel("Job Information:");
 		jobInfo = new JTextArea(30,60);
-		//carInfoLabel = new JLabel("Car Information:");
-		//carInfo = new JTextArea(30,60);
+		carInfoLabel = new JLabel("Car Information:");
+		carInfo = new JTextArea(30,60);
 		//JScrollPane scrollPane = new JScrollPane(jobInfo); 
 		jobInfo.setEditable(false);
+		carInfo.setEditable(false);
 	}
 	
 	
@@ -92,12 +102,14 @@ public class VCMFrame extends JFrame {
 		//panel.add(VCMLabel);
 		panel.add(jobInfoLabel);
 		panel.add(jobInfo);
-		panel.add(confirmButton);
-		panel.add(declineButton);
-		//panel.add(carInfoLabel);
-		//panel.add(carInfo);
+		panel.add(confirmJobButton);
+		panel.add(declineJobButton);
+		panel.add(carInfoLabel);
+		panel.add(carInfo);
+		panel.add(confirmCarButton);
+		panel.add(declineCarButton);
 		panel.add(searchJobButton);
-		panel.add(backButton);
+		//panel.add(backButton);
 		this.add(panel);}
 	
 	//private void clearTextFields() {
@@ -109,7 +121,7 @@ public class VCMFrame extends JFrame {
 		this.dispose(); 
 	}
 	
-	class confirmListener implements ActionListener {
+	class ConfirmJobListener implements ActionListener {
 		
 		PrintStream output;
 		
@@ -118,7 +130,8 @@ public class VCMFrame extends JFrame {
 				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
 				output.append(clientInput);
 				output.close();
-				outputStream.writeUTF("confirmed");
+				outputStream.writeUTF("job_confirmed");
+				jobInfo.setText("");
 			}
 			catch (Exception e) {
 				System.out.println(e);
@@ -126,31 +139,83 @@ public class VCMFrame extends JFrame {
 		}
 	}
 	
-	class BackListener implements ActionListener {
+	class DeclineJobListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			try {
+				outputStream.writeUTF("job_declined");
+			}
+			catch (IOException e) {
+				System.out.println(e);
+			}
+			
+		}
+	}
+	
+class ConfirmCarListener implements ActionListener {
+		
+		PrintStream output;
 		
 		public void actionPerformed(ActionEvent event) {
-			closeFrame();
-			JFrame frame = new WelcomeFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);
-		    }
-		
+			try {
+				output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
+				output.append(ownerInput);
+				output.close();
+				outputStream.writeUTF("car_confirmed");
+				carInfo.setText("");
+			}
+			catch (Exception e) {
+				System.out.println(e);
+			}
 		}
+	}
+	
+	class DeclineCarListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			try {
+				outputStream.writeUTF("car_declined");
+			}
+			catch (IOException e) {
+				System.out.println(e);
+			}
+			
+		}
+	}
+	
+//	class BackListener implements ActionListener {
+//		
+//		public void actionPerformed(ActionEvent event) {
+//			closeFrame();
+//			JFrame frame = new WelcomeFrame();
+//			frame.setLayout(new GridLayout(2,1));
+//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		    frame.setVisible(true);
+//		    }
+//		
+//		}
 	
 	private void createButtons() {
-		//submitButton = new JButton("Submit");
-		//ActionListener submitListener = new SubmitListener();
-		//submitButton.addActionListener(submitListener);
-		confirmButton = new JButton("Confirm Job/Car");
+
+		confirmJobButton = new JButton("Confirm Job");
+		ActionListener confirmJobListener = new ConfirmJobListener();
+		confirmJobButton.addActionListener(confirmJobListener);
 		
-		declineButton = new JButton("Decline Job/Car");
+		declineJobButton = new JButton("Decline Job");
+		ActionListener declineJobListener = new DeclineJobListener();
+		declineJobButton.addActionListener(declineJobListener);
+		
+		confirmCarButton = new JButton("Confirm Car");
+		ActionListener confirmCarListener = new ConfirmCarListener();
+		confirmCarButton.addActionListener(confirmCarListener);
+		
+		declineCarButton = new JButton("Decline Car");
+		ActionListener declineCarListener = new DeclineCarListener();
+		declineCarButton.addActionListener(declineCarListener);
 		
 		searchJobButton = new JButton("Search Job/Car");
 		
-		backButton = new JButton("Back");
-		ActionListener backListener = new BackListener();
-		backButton.addActionListener(backListener);
+//		backButton = new JButton("Back");
+//		ActionListener backListener = new BackListener();
+//		backButton.addActionListener(backListener);
 		
 	}
 	

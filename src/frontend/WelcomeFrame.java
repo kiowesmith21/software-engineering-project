@@ -42,9 +42,7 @@ public class WelcomeFrame extends JFrame {
 			closeFrame();
 			try {
 				JFrame frame = new ClientFrame();
-//				frame.setLayout(new GridLayout(2,1));
-//				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//			    frame.setVisible(true);
+
 			}
 			catch (IOException e) {
 				
@@ -56,9 +54,6 @@ public class WelcomeFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
 			JFrame frame = new OwnerFrame();
-//			frame.setLayout(new GridLayout(2,1));
-//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		    frame.setVisible(true);
 		}
 	}
 	
@@ -67,9 +62,6 @@ public class WelcomeFrame extends JFrame {
 			closeFrame();
 			try {
 				JFrame frame = new VCMFrame();
-				frame.setLayout(new GridLayout(2,1));
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			    frame.setVisible(true);
 			}
 			catch (IOException e) {
 				
