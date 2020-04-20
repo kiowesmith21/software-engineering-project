@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
-import java.io.PrintStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -34,10 +33,13 @@ public class ClientFrame extends JFrame {
 	private JTextField jobDeadlineField;
 	private JButton submitButton;
 	private JButton backButton;
+	private JLabel responseLabel;
 	
 	Socket socket;
 	DataInputStream inputStream;
 	DataOutputStream outputStream;
+	
+	private String vcmResponse;
 	
 	public ClientFrame() throws IOException {
 				
@@ -73,6 +75,7 @@ public class ClientFrame extends JFrame {
 		jobDurationField = new JTextField(FIELD_WIDTH);
 		jobDeadlineLabel = new JLabel("Job Deadline: ");
 		jobDeadlineField = new JTextField(FIELD_WIDTH);
+		responseLabel = new JLabel();
 		
 	}
 	
@@ -91,7 +94,7 @@ public class ClientFrame extends JFrame {
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			try {
-				String jobInfo = String.format("JOB:%s,%s,%s,%s,%s\n",
+				String jobInfo = String.format("JOB:%s,%s,%s,%s,%s",
 						clientIdField.getText(),
 						 jobIdField.getText(),
 						 jobDurationField.getText(),
@@ -99,17 +102,19 @@ public class ClientFrame extends JFrame {
 						 new Timestamp(System.currentTimeMillis())
 						 );
 				outputStream.writeUTF(jobInfo);
-//				PrintStream output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
-//				String toAppend = String.format("%s,%s,%s,%s,%s\n",
-//						clientIdField.getText(),
-//						 jobIdField.getText(),
-//						 jobDurationField.getText(),
-//						 jobDeadlineField.getText(),
-//						 new Timestamp(System.currentTimeMillis())
-//						 );
-//				output.append(toAppend);
-//				output.close();
 				clearTextFields();
+				
+				while(true) {
+					vcmResponse = inputStream.readUTF();
+					if (vcmResponse.equals("job_confirmed")) {
+						responseLabel.setText("Job accepted!");
+						break;
+					}
+					else if (vcmResponse.equals("job_declined")) {
+						responseLabel.setText("Job declined!");
+						break;
+					}
+				}
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -152,6 +157,7 @@ public class ClientFrame extends JFrame {
 		panel.add(jobDeadlineField);
 		panel.add(submitButton);
 		panel.add(backButton);
+		panel.add(responseLabel);
 		this.add(panel);
 	}
 	

@@ -53,7 +53,12 @@ public class WelcomeFrame extends JFrame {
 	class OwnerButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
-			JFrame frame = new OwnerFrame();
+			try {
+				JFrame frame = new OwnerFrame();
+			}
+			catch (IOException e) {
+				
+			}
 		}
 	}
 	

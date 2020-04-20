@@ -4,12 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
-import java.io.PrintStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-
+import java.io.IOException;
 import java.net.Socket;
 
 import java.sql.Timestamp;
@@ -32,13 +29,16 @@ public class OwnerFrame extends JFrame {
 	private JLabel vehicleDurationLabel;
 	private JTextField vehicleDurationField;
 	private JButton submitButton;
-	private JButton backButton;                  
+	private JButton backButton;
+	private JLabel responseLabel;
 	
 	Socket socket;
 	DataInputStream inputStream;
 	DataOutputStream outputStream;
 	
-	public OwnerFrame() {
+	private String vcmResponse;
+	
+	public OwnerFrame() throws IOException {
 		
 		this.createTextFields();
 		this.createButtons();
@@ -71,6 +71,7 @@ public class OwnerFrame extends JFrame {
 		vehicleInfoField = new JTextField(FIELD_WIDTH);
 		vehicleDurationLabel = new JLabel("Vehicle Duration: ");
 		vehicleDurationField = new JTextField(FIELD_WIDTH);
+		responseLabel = new JLabel();
 		
 	}
 	
@@ -88,23 +89,26 @@ public class OwnerFrame extends JFrame {
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			try {
-				String carInfo = String.format("CAR:%s,%s,%s,%s\n",
+				String carInfo = String.format("CAR:%s,%s,%s,%s",
 						ownerIdField.getText(),
 						 vehicleInfoField.getText(),
 						 vehicleDurationField.getText(),
 						 new Timestamp(System.currentTimeMillis())
 						 );
 				outputStream.writeUTF(carInfo);
-//				PrintStream output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
-//				String toAppend = String.format("%s,%s,%s,%s\n",
-//						ownerIdField.getText(),
-//						 vehicleInfoField.getText(),
-//						 vehicleDurationField.getText(),
-//						 new Timestamp(System.currentTimeMillis())
-//						 );
-//				output.append(toAppend);
-//				output.close();
 				clearTextFields();
+				
+				while(true) {
+					vcmResponse = inputStream.readUTF();
+					if (vcmResponse.equals("car_confirmed")) {
+						responseLabel.setText("Car accepted!");
+						break;
+					}
+					else if (vcmResponse.equals("car_declined")) {
+						responseLabel.setText("Car declined!");
+						break;
+					}
+				}
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -145,6 +149,7 @@ public class OwnerFrame extends JFrame {
 		panel.add(vehicleDurationField);
 		panel.add(submitButton);
 		panel.add(backButton);
+		panel.add(responseLabel);
 		this.add(panel);
 	}
 	

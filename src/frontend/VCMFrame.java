@@ -43,7 +43,7 @@ public class VCMFrame extends JFrame {
 	private JButton declineJobButton;
 	private JButton confirmCarButton;
 	private JButton declineCarButton;
-	private JButton searchJobButton;
+	//private JButton searchJobButton;
 	private JTextArea jobInfo;
 	private JTextArea carInfo;
 	
@@ -71,12 +71,11 @@ public class VCMFrame extends JFrame {
 		while(true) {
 			String in = inputStream.readUTF();
 			if (in.substring(0,4).equals("JOB:")) {
-				this.clientInput = in.substring(4,in.length()-1);
+				this.clientInput = in.substring(4,in.length()-1) + "\n";
 				jobInfo.setText(clientInput);
-				System.out.println(clientInput);
 			}
 			else {
-				this.ownerInput = in.substring(4,in.length()-1);
+				this.ownerInput = in.substring(4,in.length()-1) +  "\n";
 				carInfo.setText(ownerInput);
 			}
 		}
@@ -108,13 +107,10 @@ public class VCMFrame extends JFrame {
 		panel.add(carInfo);
 		panel.add(confirmCarButton);
 		panel.add(declineCarButton);
-		panel.add(searchJobButton);
+		//panel.add(searchJobButton);
 		//panel.add(backButton);
 		this.add(panel);}
 	
-	//private void clearTextFields() {
-	//	jobInfo.setText("");
-	//}
 	
 	public void closeFrame() {
 		this.setVisible(false);
@@ -134,7 +130,7 @@ public class VCMFrame extends JFrame {
 				jobInfo.setText("");
 			}
 			catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 	}
@@ -145,13 +141,13 @@ public class VCMFrame extends JFrame {
 				outputStream.writeUTF("job_declined");
 			}
 			catch (IOException e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 			
 		}
 	}
 	
-class ConfirmCarListener implements ActionListener {
+	class ConfirmCarListener implements ActionListener {
 		
 		PrintStream output;
 		
@@ -164,7 +160,7 @@ class ConfirmCarListener implements ActionListener {
 				carInfo.setText("");
 			}
 			catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 	}
@@ -175,7 +171,7 @@ class ConfirmCarListener implements ActionListener {
 				outputStream.writeUTF("car_declined");
 			}
 			catch (IOException e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 			
 		}
@@ -211,7 +207,7 @@ class ConfirmCarListener implements ActionListener {
 		ActionListener declineCarListener = new DeclineCarListener();
 		declineCarButton.addActionListener(declineCarListener);
 		
-		searchJobButton = new JButton("Search Job/Car");
+		//searchJobButton = new JButton("Search Job/Car");
 		
 //		backButton = new JButton("Back");
 //		ActionListener backListener = new BackListener();
