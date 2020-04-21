@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.FileNotFoundException;
@@ -69,7 +70,9 @@ public class VCMFrame extends JFrame {
 		outputStream = new DataOutputStream(socket.getOutputStream());
 		
 		while(true) {
+
 			String in = inputStream.readUTF();
+			System.out.println(in);
 			if (in.substring(0,4).equals("JOB:")) {
 				this.clientInput = in.substring(4,in.length()-1) + "\n";
 				jobInfo.setText(clientInput);
@@ -139,6 +142,7 @@ public class VCMFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			try {
 				outputStream.writeUTF("job_declined");
+				jobInfo.setText("");
 			}
 			catch (IOException e) {
 				e.printStackTrace();
@@ -169,6 +173,7 @@ public class VCMFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			try {
 				outputStream.writeUTF("car_declined");
+				carInfo.setText("");
 			}
 			catch (IOException e) {
 				e.printStackTrace();
