@@ -6,7 +6,6 @@ import java.awt.GridLayout;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.FileNotFoundException;
@@ -23,12 +22,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import frontend.ClientFrame.BackListener;
-import frontend.ClientFrame.SubmitListener;
-
-import java.net.ServerSocket;
-import java.net.Socket;
-
 public class VCMFrame extends JFrame {
 	public static final int FRAME_WIDTH = 500;
 	private static final int FRAME_HEIGHT = 400; 
@@ -39,7 +32,7 @@ public class VCMFrame extends JFrame {
 	//private JLabel VCMLabel;
 	private JLabel jobInfoLabel;
 	private JLabel carInfoLabel;
-	private JButton backButton;
+	//private JButton backButton;
 	private JButton confirmJobButton;
 	private JButton declineJobButton;
 	private JButton confirmCarButton;
@@ -64,15 +57,11 @@ public class VCMFrame extends JFrame {
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		serverSocket = new ServerSocket(9806);
-		socket = serverSocket.accept();
-		inputStream = new DataInputStream(socket.getInputStream());
-		outputStream = new DataOutputStream(socket.getOutputStream());
+		this.initServer();
 		
 		while(true) {
-
+			try {
 			String in = inputStream.readUTF();
-			System.out.println(in);
 			if (in.substring(0,4).equals("JOB:")) {
 				this.clientInput = in.substring(4,in.length()-1) + "\n";
 				jobInfo.setText(clientInput);
@@ -81,6 +70,14 @@ public class VCMFrame extends JFrame {
 				this.ownerInput = in.substring(4,in.length()-1) +  "\n";
 				carInfo.setText(ownerInput);
 			}
+			}
+			catch(Exception e) {
+				socket.close();
+				serverSocket.close();
+				this.initServer();
+				continue;
+			}
+
 		}
 		
 	}
@@ -97,7 +94,12 @@ public class VCMFrame extends JFrame {
 		carInfo.setEditable(false);
 	}
 	
-	
+	private void initServer() throws IOException {
+		serverSocket = new ServerSocket(9806);
+		socket = serverSocket.accept();
+		inputStream = new DataInputStream(socket.getInputStream());
+		outputStream = new DataOutputStream(socket.getOutputStream());
+	}
 	
 	private void createPanel() {
 		JPanel panel = new JPanel(new GridLayout(0,1));

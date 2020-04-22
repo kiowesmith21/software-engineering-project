@@ -126,6 +126,14 @@ public class ClientFrame extends JFrame {
 	
 	class BackListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
+			try {
+				socket.close();
+				inputStream.close();
+				outputStream.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 			closeFrame();
 			JFrame frame = new WelcomeFrame();
 			frame.setLayout(new GridLayout(2,1));

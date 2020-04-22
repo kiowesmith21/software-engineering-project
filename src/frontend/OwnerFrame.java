@@ -3,8 +3,6 @@ package frontend;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,8 +24,8 @@ public class OwnerFrame extends JFrame {
 
 	private JLabel ownerIdLabel;
 	private JTextField ownerIdField;
-	private JLabel vehicleInfoLabel;
-	private JTextField vehicleInfoField;
+	private JLabel vehicleIdLabel;
+	private JTextField vehicleIdField;
 	private JLabel vehicleDurationLabel;
 	private JTextField vehicleDurationField;
 	private JButton submitButton;
@@ -53,9 +51,9 @@ public class OwnerFrame extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 		try {
-			this.socket = new Socket("localhost", 9806);
-			this.inputStream = new DataInputStream(socket.getInputStream());
-			this.outputStream = new DataOutputStream(socket.getOutputStream());
+			socket = new Socket("localhost", 9806);
+			inputStream = new DataInputStream(socket.getInputStream());
+			outputStream = new DataOutputStream(socket.getOutputStream());
 		}
 		catch (Exception e) {
 			this.closeFrame();
@@ -66,10 +64,10 @@ public class OwnerFrame extends JFrame {
 	
 	private void createTextFields() {
 		final int FIELD_WIDTH = 10;
-		ownerIdLabel = new JLabel("Owner ID: ");
+		ownerIdLabel = new JLabel("Vehicle Owner ID: ");
 		ownerIdField = new JTextField(FIELD_WIDTH);
-		vehicleInfoLabel = new JLabel("Vehicle Info: ");
-		vehicleInfoField = new JTextField(FIELD_WIDTH);
+		vehicleIdLabel = new JLabel("Vehicle ID: ");
+		vehicleIdField = new JTextField(FIELD_WIDTH);
 		vehicleDurationLabel = new JLabel("Vehicle Duration: ");
 		vehicleDurationField = new JTextField(FIELD_WIDTH);
 		responseLabel = new JLabel();
@@ -78,7 +76,7 @@ public class OwnerFrame extends JFrame {
 	
 	private void clearTextFields() {
 		ownerIdField.setText("");
-		vehicleInfoField.setText("");
+		vehicleIdField.setText("");
 		vehicleDurationField.setText("");
 	}
 	
@@ -92,7 +90,7 @@ public class OwnerFrame extends JFrame {
 			try {
 				String carInfo = String.format("CAR:%s,%s,%s,%s",
 						ownerIdField.getText(),
-						 vehicleInfoField.getText(),
+						 vehicleIdField.getText(),
 						 vehicleDurationField.getText(),
 						 new Timestamp(System.currentTimeMillis())
 						 );
@@ -121,11 +119,20 @@ public class OwnerFrame extends JFrame {
 	
 	class BackListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
+			try {
+				socket.close();
+				inputStream.close();
+				outputStream.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 			closeFrame();
 			JFrame frame = new WelcomeFrame();
 			frame.setLayout(new GridLayout(2,1));
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    frame.setVisible(true);
+		    
 		}
 	}
 	
@@ -144,8 +151,8 @@ public class OwnerFrame extends JFrame {
 		JPanel panel = new JPanel(new GridLayout(0,1));
 		panel.add(ownerIdLabel);
 		panel.add(ownerIdField);
-		panel.add(vehicleInfoLabel);
-		panel.add(vehicleInfoField);
+		panel.add(vehicleIdLabel);
+		panel.add(vehicleIdField);
 		panel.add(vehicleDurationLabel);
 		panel.add(vehicleDurationField);
 		panel.add(submitButton);

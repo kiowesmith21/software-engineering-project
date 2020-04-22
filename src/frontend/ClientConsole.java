@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
-public class UserConsole {
+public class ClientConsole {
 	
 	static JFrame frame;
 	
