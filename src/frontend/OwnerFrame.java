@@ -3,6 +3,8 @@ package frontend;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -50,15 +52,14 @@ public class OwnerFrame extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		
 		try {
-			socket = new Socket("localhost", 9806);
-			inputStream = new DataInputStream(socket.getInputStream());
-			outputStream = new DataOutputStream(socket.getOutputStream());
+			this.socket = new Socket("localhost", 9806);
+			this.inputStream = new DataInputStream(socket.getInputStream());
+			this.outputStream = new DataOutputStream(socket.getOutputStream());
 		}
 		catch (Exception e) {
 			this.closeFrame();
-			JFrame errorFrame = new ErrorFrame(e.toString());
+			JFrame errorFrame = new ErrorFrame("error, please check if the server is running");
 		}
 		
 	}

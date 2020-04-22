@@ -60,7 +60,7 @@ public class ClientFrame extends JFrame {
 		}
 		catch (Exception e) {
 			this.closeFrame();
-			JFrame errorFrame = new ErrorFrame(e.toString());
+			JFrame errorFrame = new ErrorFrame("error, please check if the server is running");
 		}
 		
 	}
