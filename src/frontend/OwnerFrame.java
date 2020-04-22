@@ -47,9 +47,7 @@ public class OwnerFrame extends JFrame {
 		this.setLayout(new GridLayout(2,1));
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setVisible(true);
 		try {
 			socket = new Socket("localhost", 9806);
 			inputStream = new DataInputStream(socket.getInputStream());
@@ -128,9 +126,7 @@ public class OwnerFrame extends JFrame {
 				e.printStackTrace();
 			}
 			closeFrame();
-			JFrame frame = new WelcomeFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			JFrame frame = new WelcomeFrame(getLocation());
 		    frame.setVisible(true);
 		    
 		}

@@ -3,6 +3,8 @@ package frontend;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Point;
+
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -28,7 +30,7 @@ public class WelcomeFrame extends JFrame {
 		
 		this.createClientButton();
 		this.createOwnerButton();
-		this.createVCMButton();
+		//this.createVCMButton();
 		this.createPanel();
 		this.setLayout(new GridLayout(2,1));
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -37,11 +39,27 @@ public class WelcomeFrame extends JFrame {
 		this.setVisible(true);
 	}
 	
+	public WelcomeFrame(Point location) {
+			
+			welcomeLabel = new JLabel("Welcome");
+			
+			this.createClientButton();
+			this.createOwnerButton();
+			//this.createVCMButton();
+			this.createPanel();
+			this.setLayout(new GridLayout(2,1));
+			this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+			this.setLocation(location);
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+	
 	class ClientButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
 			try {
 				JFrame frame = new ClientFrame();
+				frame.setLocation(getLocation());
+				frame.setVisible(true);
 
 			}
 			catch (IOException e) {
@@ -55,6 +73,8 @@ public class WelcomeFrame extends JFrame {
 			closeFrame();
 			try {
 				JFrame frame = new OwnerFrame();
+				frame.setLocation(getLocation());
+				frame.setVisible(true);
 			}
 			catch (IOException e) {
 				
