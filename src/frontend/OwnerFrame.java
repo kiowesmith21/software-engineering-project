@@ -4,6 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+
+import java.sql.Timestamp;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,51 +18,63 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-import java.io.PrintStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.sql.Timestamp;
-
 public class OwnerFrame extends JFrame {
 	public static final int FRAME_WIDTH = 500;
 	private static final int FRAME_HEIGHT = 400;   
 
 	private JLabel ownerIdLabel;
 	private JTextField ownerIdField;
-	private JLabel vehicleInfoLabel;
-	private JTextField vehicleInfoField;
+	private JLabel vehicleIdLabel;
+	private JTextField vehicleIdField;
 	private JLabel vehicleDurationLabel;
 	private JTextField vehicleDurationField;
 	private JButton submitButton;
-	private JButton backButton;                                                                                                                              
+	private JButton backButton;
+	private JLabel responseLabel;
 	
-	public OwnerFrame() {
+	Socket socket;
+	DataInputStream inputStream;
+	DataOutputStream outputStream;
+	
+	private String vcmResponse;
+	
+	public OwnerFrame() throws IOException {
 		
 		this.createTextFields();
-		this.createButton();
+		this.createButtons();
 		this.createPanel();
 		
 		this.setLayout(new GridLayout(2,1));
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		try {
+			socket = new Socket("localhost", 9806);
+			inputStream = new DataInputStream(socket.getInputStream());
+			outputStream = new DataOutputStream(socket.getOutputStream());
+		}
+		catch (Exception e) {
+			this.closeFrame();
+			JFrame errorFrame = new ErrorFrame("error, please check if the server is running");
+		}
 		
 	}
 	
 	private void createTextFields() {
 		final int FIELD_WIDTH = 10;
-		ownerIdLabel = new JLabel("Owner ID: ");
+		ownerIdLabel = new JLabel("Vehicle Owner ID: ");
 		ownerIdField = new JTextField(FIELD_WIDTH);
-		vehicleInfoLabel = new JLabel("Vehicle Info: ");
-		vehicleInfoField = new JTextField(FIELD_WIDTH);
+		vehicleIdLabel = new JLabel("Vehicle ID: ");
+		vehicleIdField = new JTextField(FIELD_WIDTH);
 		vehicleDurationLabel = new JLabel("Vehicle Duration: ");
 		vehicleDurationField = new JTextField(FIELD_WIDTH);
+		responseLabel = new JLabel();
 		
 	}
 	
 	private void clearTextFields() {
 		ownerIdField.setText("");
-		vehicleInfoField.setText("");
+		vehicleIdField.setText("");
 		vehicleDurationField.setText("");
 	}
 	
@@ -66,20 +85,29 @@ public class OwnerFrame extends JFrame {
 	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			PrintStream output;
 			try {
-				output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
-				String toAppend = String.format("%s,%s,%s,%s\n",
+				String carInfo = String.format("CAR:%s,%s,%s,%s",
 						ownerIdField.getText(),
-						 vehicleInfoField.getText(),
+						 vehicleIdField.getText(),
 						 vehicleDurationField.getText(),
 						 new Timestamp(System.currentTimeMillis())
 						 );
-				output.append(toAppend);
-				output.close();
+				outputStream.writeUTF(carInfo);
 				clearTextFields();
 				
-			} catch (FileNotFoundException e) {
+				while(true) {
+					vcmResponse = inputStream.readUTF();
+					if (vcmResponse.equals("car_confirmed")) {
+						responseLabel.setText("Car accepted!");
+						break;
+					}
+					else if (vcmResponse.equals("car_declined")) {
+						responseLabel.setText("Car declined!");
+						break;
+					}
+				}
+				
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -89,16 +117,23 @@ public class OwnerFrame extends JFrame {
 	
 	class BackListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
+			try {
+				socket.close();
+				inputStream.close();
+				outputStream.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 			closeFrame();
-			JFrame frame = new WelcomeFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			JFrame frame = new WelcomeFrame(getLocation());
 		    frame.setVisible(true);
+		    
 		}
 	}
 	
 	
-	private void createButton() {
+	private void createButtons() {
 		submitButton = new JButton("Submit");
 		ActionListener listener = new SubmitListener();
 		submitButton.addActionListener(listener);
@@ -112,12 +147,13 @@ public class OwnerFrame extends JFrame {
 		JPanel panel = new JPanel(new GridLayout(0,1));
 		panel.add(ownerIdLabel);
 		panel.add(ownerIdField);
-		panel.add(vehicleInfoLabel);
-		panel.add(vehicleInfoField);
+		panel.add(vehicleIdLabel);
+		panel.add(vehicleIdField);
 		panel.add(vehicleDurationLabel);
 		panel.add(vehicleDurationField);
 		panel.add(submitButton);
 		panel.add(backButton);
+		panel.add(responseLabel);
 		this.add(panel);
 	}
 	

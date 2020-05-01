@@ -3,6 +3,10 @@ package frontend;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Point;
+
+import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,12 +15,13 @@ import javax.swing.JPanel;
 
 public class WelcomeFrame extends JFrame {
 	
-	private static final int FRAME_WIDTH = 450;
+	private static final int FRAME_WIDTH = 500;
 	private static final int FRAME_HEIGHT = 100;
 	
 	private JLabel welcomeLabel;
 	private JButton clientButton;
 	private JButton ownerButton;
+	private JButton vcmButton;
 	
 	public WelcomeFrame() {
 		
@@ -25,30 +30,68 @@ public class WelcomeFrame extends JFrame {
 		
 		this.createClientButton();
 		this.createOwnerButton();
+		//this.createVCMButton();
 		this.createPanel();
-		
 		this.setLayout(new GridLayout(2,1));
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
+	
+	public WelcomeFrame(Point location) {
+			
+			welcomeLabel = new JLabel("Welcome");
+			
+			this.createClientButton();
+			this.createOwnerButton();
+			//this.createVCMButton();
+			this.createPanel();
+			this.setLayout(new GridLayout(2,1));
+			this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+			this.setLocation(location);
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
 	
 	class ClientButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
-			JFrame frame = new ClientFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);
+			try {
+				JFrame frame = new ClientFrame();
+				frame.setLocation(getLocation());
+				frame.setVisible(true);
+
+			}
+			catch (IOException e) {
+				
+			}
 		}
 	}
 	
 	class OwnerButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			closeFrame();
-			JFrame frame = new OwnerFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    frame.setVisible(true);
+			try {
+				JFrame frame = new OwnerFrame();
+				frame.setLocation(getLocation());
+				frame.setVisible(true);
+			}
+			catch (IOException e) {
+				
+			}
+		}
+	}
+	
+	class VCMButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			closeFrame();
+			try {
+				JFrame frame = new VCMFrame();
+			}
+			catch (IOException e) {
+				
+			}
+			
 		}
 	}
 	
@@ -71,11 +114,19 @@ public class WelcomeFrame extends JFrame {
 		
 	}
 	
+	private void createVCMButton() {
+		vcmButton = new JButton("VC Manager");
+		ActionListener listener = new VCMButtonListener();
+		vcmButton.addActionListener(listener);
+		
+	}
+	
 	private void createPanel() {
 		JPanel panel = new JPanel();
 		panel.add(welcomeLabel);
 		panel.add(clientButton);
 		panel.add(ownerButton);
-		add(panel);
+//		panel.add(vcmButton);
+		this.add(panel);
 	}
 }

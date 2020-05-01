@@ -43,7 +43,7 @@ public class JobController {
 		PrintStream output;
 		try {
 			output = new PrintStream(new FileOutputStream("Jobs.txt", true));
-			String toAppend = String.format("%s,%s,%s,%s,%s,%s,%s,%s\n",
+			String toAppend = String.format("\n%s,%s,%s,%s,%s,%s,%s,%s\n",
 					job.id,
 					job.duration,
 					job.registerTime,

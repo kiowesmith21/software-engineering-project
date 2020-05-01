@@ -4,16 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import java.net.Socket;
+
+import java.sql.Timestamp;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import java.io.PrintStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.sql.Timestamp;
 
 public class ClientFrame extends JFrame {
 	
@@ -30,8 +33,16 @@ public class ClientFrame extends JFrame {
 	private JTextField jobDeadlineField;
 	private JButton submitButton;
 	private JButton backButton;
-	public ClientFrame() {
-		
+	private JLabel responseLabel;
+	
+	Socket socket;
+	DataInputStream inputStream;
+	DataOutputStream outputStream;
+	
+	private String vcmResponse;
+	
+	public ClientFrame() throws IOException {
+				
 		this.createTextFields();
 		this.createButtons();
 		this.createPanel();
@@ -39,7 +50,16 @@ public class ClientFrame extends JFrame {
 		this.setLayout(new GridLayout(2,1));
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		try {
+			socket = new Socket("localhost", 9806);
+			inputStream = new DataInputStream(socket.getInputStream());
+			outputStream = new DataOutputStream(socket.getOutputStream());
+		}
+		catch (Exception e) {
+			this.closeFrame();
+			JFrame errorFrame = new ErrorFrame("error, please check if the server is running");
+		}
 		
 	}
 	
@@ -53,6 +73,7 @@ public class ClientFrame extends JFrame {
 		jobDurationField = new JTextField(FIELD_WIDTH);
 		jobDeadlineLabel = new JLabel("Job Deadline: ");
 		jobDeadlineField = new JTextField(FIELD_WIDTH);
+		responseLabel = new JLabel();
 		
 	}
 	
@@ -70,21 +91,30 @@ public class ClientFrame extends JFrame {
 	
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			PrintStream output;
 			try {
-				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
-				String toAppend = String.format("%s,%s,%s,%s,%s\n",
+				String jobInfo = String.format("JOB:%s,%s,%s,%s,%s",
 						clientIdField.getText(),
 						 jobIdField.getText(),
 						 jobDurationField.getText(),
 						 jobDeadlineField.getText(),
 						 new Timestamp(System.currentTimeMillis())
 						 );
-				output.append(toAppend);
-				output.close();
+				outputStream.writeUTF(jobInfo);
 				clearTextFields();
 				
-			} catch (FileNotFoundException e) {
+				while(true) {
+					vcmResponse = inputStream.readUTF();
+					if (vcmResponse.equals("job_confirmed")) {
+						responseLabel.setText("Job accepted!");
+						break;
+					}
+					else if (vcmResponse.equals("job_declined")) {
+						responseLabel.setText("Job declined!");
+						break;
+					}
+				}
+				
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -94,10 +124,16 @@ public class ClientFrame extends JFrame {
 	
 	class BackListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
+			try {
+				socket.close();
+				inputStream.close();
+				outputStream.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 			closeFrame();
-			JFrame frame = new WelcomeFrame();
-			frame.setLayout(new GridLayout(2,1));
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			JFrame frame = new WelcomeFrame(getLocation());
 		    frame.setVisible(true);
 		}
 	}
@@ -125,6 +161,7 @@ public class ClientFrame extends JFrame {
 		panel.add(jobDeadlineField);
 		panel.add(submitButton);
 		panel.add(backButton);
+		panel.add(responseLabel);
 		this.add(panel);
 	}
 	
