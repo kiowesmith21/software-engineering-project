@@ -83,6 +83,7 @@ public class ClientFrame extends JFrame {
 	
 	private void clearTextFields() {
 		clientIdField.setText("");
+		clientNameField.setText("");
 		jobIdField.setText("");
 		jobDurationField.setText("");
 //		jobDeadlineField.setText("");
