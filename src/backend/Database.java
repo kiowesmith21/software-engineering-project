@@ -1,3 +1,5 @@
+package backend; 
+
 import java.sql.*;
 
 public class Database {
