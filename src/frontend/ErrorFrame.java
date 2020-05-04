@@ -23,6 +23,7 @@ public class ErrorFrame extends JFrame {
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setAlwaysOnTop(true);
 		this.setVisible(true);
 
 	}
