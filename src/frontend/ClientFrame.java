@@ -25,12 +25,14 @@ public class ClientFrame extends JFrame {
 
 	private JLabel clientIdLabel;
 	private JTextField clientIdField;
+	private JLabel clientNameLabel;
+	private JTextField clientNameField;
 	private JLabel jobIdLabel;
 	private JTextField jobIdField;
 	private JLabel jobDurationLabel;
 	private JTextField jobDurationField;
-	private JLabel jobDeadlineLabel;
-	private JTextField jobDeadlineField;
+//	private JLabel jobDeadlineLabel;
+//	private JTextField jobDeadlineField;
 	private JButton submitButton;
 	private JButton backButton;
 	private JLabel responseLabel;
@@ -67,12 +69,14 @@ public class ClientFrame extends JFrame {
 		final int FIELD_WIDTH = 10;
 		clientIdLabel = new JLabel("Client ID: ");
 		clientIdField = new JTextField(FIELD_WIDTH);
+		clientNameLabel = new JLabel("Client Name: ");
+		clientNameField = new JTextField(FIELD_WIDTH);
 		jobIdLabel = new JLabel("Job ID: ");
 		jobIdField = new JTextField(FIELD_WIDTH);
 		jobDurationLabel = new JLabel("Job Duration: ");
 		jobDurationField = new JTextField(FIELD_WIDTH);
-		jobDeadlineLabel = new JLabel("Job Deadline: ");
-		jobDeadlineField = new JTextField(FIELD_WIDTH);
+//		jobDeadlineLabel = new JLabel("Job Deadline: ");
+//		jobDeadlineField = new JTextField(FIELD_WIDTH);
 		responseLabel = new JLabel();
 		
 	}
@@ -81,7 +85,7 @@ public class ClientFrame extends JFrame {
 		clientIdField.setText("");
 		jobIdField.setText("");
 		jobDurationField.setText("");
-		jobDeadlineField.setText("");
+//		jobDeadlineField.setText("");
 	}
 	
 	public void closeFrame() {
@@ -94,9 +98,10 @@ public class ClientFrame extends JFrame {
 			try {
 				String jobInfo = String.format("JOB:%s,%s,%s,%s,%s",
 						clientIdField.getText(),
+						clientNameField.getText(),
 						 jobIdField.getText(),
 						 jobDurationField.getText(),
-						 jobDeadlineField.getText(),
+//						 jobDeadlineField.getText(),
 						 new Timestamp(System.currentTimeMillis())
 						 );
 				outputStream.writeUTF(jobInfo);
@@ -153,12 +158,14 @@ public class ClientFrame extends JFrame {
 		JPanel panel = new JPanel(new GridLayout(0,1));
 		panel.add(clientIdLabel);
 		panel.add(clientIdField);
+		panel.add(clientNameLabel);
+		panel.add(clientNameField);
 		panel.add(jobIdLabel);
 		panel.add(jobIdField);
 		panel.add(jobDurationLabel);
 		panel.add(jobDurationField);
-		panel.add(jobDeadlineLabel);
-		panel.add(jobDeadlineField);
+//		panel.add(jobDeadlineLabel);
+//		panel.add(jobDeadlineField);
 		panel.add(submitButton);
 		panel.add(backButton);
 		panel.add(responseLabel);

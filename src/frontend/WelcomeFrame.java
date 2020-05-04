@@ -88,7 +88,7 @@ public class WelcomeFrame extends JFrame {
 			try {
 				JFrame frame = new VCMFrame();
 			}
-			catch (IOException e) {
+			catch (Exception e) {
 				
 			}
 			

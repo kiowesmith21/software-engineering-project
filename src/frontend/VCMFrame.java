@@ -13,6 +13,10 @@ import java.io.FileOutputStream;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -46,8 +50,13 @@ public class VCMFrame extends JFrame {
 	DataInputStream inputStream;
 	DataOutputStream outputStream;
 	
+	Connection connection;
+	String url;
+	String username;
+	String password;
 	
-	public VCMFrame() throws IOException {
+	
+	public VCMFrame() throws IOException, SQLException{
 		
 		this.createTextFields();
 		this.createButtons();
@@ -58,16 +67,17 @@ public class VCMFrame extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.initServer();
+		//this.connectToDB();
 		
 		while(true) {
 			try {
 			String in = inputStream.readUTF();
 			if (in.substring(0,4).equals("JOB:")) {
-				this.clientInput = in.substring(4,in.length()-1) + "\n";
+				this.clientInput = in.substring(4,in.length()-1);
 				jobInfo.setText(clientInput);
 			}
 			else {
-				this.ownerInput = in.substring(4,in.length()-1) +  "\n";
+				this.ownerInput = in.substring(4,in.length()-1);
 				carInfo.setText(ownerInput);
 			}
 			}
@@ -101,6 +111,13 @@ public class VCMFrame extends JFrame {
 		outputStream = new DataOutputStream(socket.getOutputStream());
 	}
 	
+	private void connectToDB() throws SQLException { 
+		this.url = "jdbc:mysql://localhost:3306/VC3?useTimezone=true&serverTimezone=UTC";
+		this.username = "root";
+		this.password = "Dancer16!";
+		this.connection = DriverManager.getConnection(url, username, password);
+	}
+	
 	private void createPanel() {
 		JPanel panel = new JPanel(new GridLayout(0,1));
 		//panel.add(VCMLabel);
@@ -128,8 +145,35 @@ public class VCMFrame extends JFrame {
 		
 		public void actionPerformed(ActionEvent event) {
 			try {
+//				String[] fields = clientInput.split(",");
+//				String clientID = fields[0];
+//				String clientName = fields[1];
+//				String jobID = fields[2];
+//				String jobDuration = fields[3];
+//				String timestamp = fields[4]; 
+//				String sql1 = "INSERT INTO client(ClientID, name)" + 
+//						" VALUES (%s, %s)".format(clientID, clientName);
+//				String sql2 = "INSERT INTO job(JobID, duration, timeSubmitted, clientID)" + 
+//						" VALUES (%s, %s, %s, %s)".format(jobID, jobDuration, timestamp, clientID);
+//				Statement statement = connection.createStatement();
+//				int row1, row2;
+//				row1 = statement.executeUpdate(sql1);
+//				if (row1 > 0) {
+//					System.out.println("client data inserted");
+//					row2 = statement.executeUpdate(sql2);
+//					if (row2 > 0) {
+//						System.out.println("job data inserted");
+//						outputStream.writeUTF("job_confirmed");
+//					}
+//					else {
+//						System.out.println("error inserting job data");
+//					}
+//				} 
+//				else {
+//					System.out.println("error inserting client data");
+//				}
 				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
-				output.append(clientInput);
+				output.append(clientInput + "\n");
 				output.close();
 				outputStream.writeUTF("job_confirmed");
 				jobInfo.setText("");
@@ -160,7 +204,7 @@ public class VCMFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			try {
 				output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
-				output.append(ownerInput);
+				output.append(ownerInput + "\n");
 				output.close();
 				outputStream.writeUTF("car_confirmed");
 				carInfo.setText("");
