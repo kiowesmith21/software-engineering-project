@@ -67,7 +67,7 @@ public class VCMFrame extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.initServer();
-		//this.connectToDB();
+		this.connectToDB();
 		
 		while(true) {
 			try {
@@ -145,37 +145,37 @@ public class VCMFrame extends JFrame {
 		
 		public void actionPerformed(ActionEvent event) {
 			try {
-//				String[] fields = clientInput.split(",");
-//				String clientID = fields[0];
-//				String clientName = fields[1];
-//				String jobID = fields[2];
-//				String jobDuration = fields[3];
-//				String timestamp = fields[4]; 
-//				String sql1 = "INSERT INTO client(ClientID, name)" + 
-//						" VALUES (%s, %s)".format(clientID, clientName);
-//				String sql2 = "INSERT INTO job(JobID, duration, timeSubmitted, clientID)" + 
-//						" VALUES (%s, %s, %s, %s)".format(jobID, jobDuration, timestamp, clientID);
-//				Statement statement = connection.createStatement();
-//				int row1, row2;
-//				row1 = statement.executeUpdate(sql1);
-//				if (row1 > 0) {
-//					System.out.println("client data inserted");
-//					row2 = statement.executeUpdate(sql2);
-//					if (row2 > 0) {
-//						System.out.println("job data inserted");
-//						outputStream.writeUTF("job_confirmed");
-//					}
-//					else {
-//						System.out.println("error inserting job data");
-//					}
-//				} 
-//				else {
-//					System.out.println("error inserting client data");
-//				}
-				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
-				output.append(clientInput + "\n");
-				output.close();
-				outputStream.writeUTF("job_confirmed");
+				String[] fields = clientInput.split(",");
+				String clientID = fields[0];
+				String clientName = fields[1];
+				String jobID = fields[2];
+				String jobDuration = fields[3];
+				String timestamp = fields[4]; 
+				String sql1 = String.format("INSERT INTO client(ClientID, name)" + 
+						" VALUES (%s, %s)", clientID, clientName);
+				String sql2 = String.format("INSERT INTO job(JobID, duration, timeSubmitted, clientID)" + 
+						" VALUES (%s, %s, %s, %s)", jobID, jobDuration, timestamp, clientID);
+				Statement statement = connection.createStatement();
+				int row1, row2;
+				row1 = statement.executeUpdate(sql1);
+				if (row1 > 0) {
+					System.out.println("client data inserted");
+					row2 = statement.executeUpdate(sql2);
+					if (row2 > 0) {
+						System.out.println("job data inserted");
+						outputStream.writeUTF("job_confirmed");
+					}
+					else {
+						System.out.println("error inserting job data");
+					}
+				} 
+				else {
+					System.out.println("error inserting client data");
+				}
+//				output = new PrintStream(new FileOutputStream("ClientInput.txt", true));
+//				output.append(clientInput + "\n");
+//				output.close();
+//				outputStream.writeUTF("job_confirmed");
 				jobInfo.setText("");
 			}
 			catch (Exception e) {
