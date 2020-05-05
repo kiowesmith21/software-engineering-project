@@ -203,10 +203,37 @@ public class VCMFrame extends JFrame {
 		
 		public void actionPerformed(ActionEvent event) {
 			try {
-				output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
-				output.append(ownerInput + "\n");
-				output.close();
-				outputStream.writeUTF("car_confirmed");
+				String[] fields = clientInput.split(",");
+				String ownerID = fields[0];
+				String ownerName = fields[1];
+				String vehicleID = fields[2];
+				String vehicleDuration = fields[3];
+				String timestamp = fields[4]; 
+				String sql1 = String.format("INSERT INTO client(ownerID, name)" + 
+						" VALUES (%s, %s)", ownerID, ownerName);
+				String sql2 = String.format("INSERT INTO job(vehicleID, duration, timeSubmitted, ownerID)" + 
+						" VALUES (%s, %s, %s, %s)", vehicleID, vehicleDuration, timestamp, ownerID);
+				Statement statement = connection.createStatement();
+				int row1, row2;
+				row1 = statement.executeUpdate(sql1);
+				if (row1 > 0) {
+					System.out.println("owner data inserted");
+					row2 = statement.executeUpdate(sql2);
+					if (row2 > 0) {
+						System.out.println("vehicle data inserted");
+						outputStream.writeUTF("car_confirmed");
+					}
+					else {
+						System.out.println("error inserting vehicle data");
+					}
+				} 
+				else {
+					System.out.println("error inserting owner data");
+				}
+//				output = new PrintStream(new FileOutputStream("OwnerInput.txt", true));
+//				output.append(ownerInput + "\n");
+//				output.close();
+//				outputStream.writeUTF("car_confirmed");
 				carInfo.setText("");
 			}
 			catch (Exception e) {
