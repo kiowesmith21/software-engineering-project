@@ -114,7 +114,7 @@ public class VCMFrame extends JFrame {
 	private void connectToDB() throws SQLException { 
 		this.url = "jdbc:mysql://localhost:3306/VC3?useTimezone=true&serverTimezone=UTC";
 		this.username = "root";
-		this.password = "Dancer16!";
+		this.password = "p@5sw0Rd?!";
 		this.connection = DriverManager.getConnection(url, username, password);
 	}
 	
@@ -151,10 +151,10 @@ public class VCMFrame extends JFrame {
 				String jobID = fields[2];
 				String jobDuration = fields[3];
 				String timestamp = fields[4]; 
-				String sql1 = String.format("INSERT INTO client (ClientID, name)" + 
-						" VALUES (%s, %s)", clientID, clientName);
-				String sql2 = String.format("INSERT INTO job (JobID, duration, timeSubmitted, clientID)" + 
-						" VALUES (%s, %s, %s, %s)", jobID, jobDuration, timestamp, clientID);
+				String sql1 = String.format("INSERT INTO client (clientID, name)" + 
+						" VALUES ('%s', '%s')", clientID, clientName);
+				String sql2 = String.format("INSERT INTO job (jobID, duration, timeSubmitted, clientID)" + 
+						" VALUES ('%s', '%s', '%s', '%s')", jobID, jobDuration, timestamp, clientID);
 				Statement statement = connection.createStatement();
 				int row1, row2;
 				row1 = statement.executeUpdate(sql1);
@@ -210,9 +210,9 @@ public class VCMFrame extends JFrame {
 				String vehicleDuration = fields[3];
 				String timestamp = fields[4]; 
 				String sql1 = String.format("INSERT INTO owner (ownerID, name)" + 
-						" VALUES (%s, %s)", ownerID, ownerName);
+						" VALUES ('%s', '%s')", ownerID, ownerName);
 				String sql2 = String.format("INSERT INTO vehicle (vehicleID, duration, timeSubmitted, ownerID)" + 
-						" VALUES (%s, %s, %s, %s)", vehicleID, vehicleDuration, timestamp, ownerID);
+						" VALUES ('%s', '%s', '%s', '%s')", vehicleID, vehicleDuration, timestamp, ownerID);
 				Statement statement = connection.createStatement();
 				int row1, row2;
 				row1 = statement.executeUpdate(sql1);
