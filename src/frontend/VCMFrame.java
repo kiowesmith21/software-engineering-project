@@ -8,23 +8,22 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
+
+import java.util.Scanner;
+
 
 public class VCMFrame extends JFrame {
 	public static final int FRAME_WIDTH = 500;
@@ -45,6 +44,8 @@ public class VCMFrame extends JFrame {
 	private JTextArea jobInfo;
 	private JTextArea carInfo;
 	
+	private JLabel messageToVCM;
+	
 	ServerSocket serverSocket;
 	Socket socket;
 	DataInputStream inputStream;
@@ -58,6 +59,9 @@ public class VCMFrame extends JFrame {
 	
 	public VCMFrame() throws IOException, SQLException{
 		
+		
+		this.connectToDB();
+		
 		this.createTextFields();
 		this.createButtons();
 		this.createPanel();
@@ -67,7 +71,6 @@ public class VCMFrame extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.initServer();
-		this.connectToDB();
 		
 		while(true) {
 			try {
@@ -99,6 +102,7 @@ public class VCMFrame extends JFrame {
 		jobInfo = new JTextArea(30,60);
 		carInfoLabel = new JLabel("Car Information:");
 		carInfo = new JTextArea(30,60);
+		messageToVCM = new JLabel();
 		//JScrollPane scrollPane = new JScrollPane(jobInfo); 
 		jobInfo.setEditable(false);
 		carInfo.setEditable(false);
@@ -113,9 +117,13 @@ public class VCMFrame extends JFrame {
 	
 	private void connectToDB() throws SQLException { 
 		this.url = "jdbc:mysql://localhost:3306/VC3?useTimezone=true&serverTimezone=UTC";
-		this.username = "root";
-		this.password = "p@5sw0Rd?!";
+		Scanner scan = new Scanner(System.in);
+		System.out.print("Enter your MySQL username: ");
+		this.username = scan.nextLine();
+		System.out.print("Enter your MySQL password: ");
+		this.password = scan.nextLine();
 		this.connection = DriverManager.getConnection(url, username, password);
+		scan.close();
 	}
 	
 	private void createPanel() {
@@ -129,6 +137,7 @@ public class VCMFrame extends JFrame {
 		panel.add(carInfo);
 		panel.add(confirmCarButton);
 		panel.add(declineCarButton);
+		panel.add(messageToVCM);
 		//panel.add(searchJobButton);
 		//panel.add(backButton);
 		this.add(panel);}
@@ -144,30 +153,22 @@ public class VCMFrame extends JFrame {
 		PrintStream output;
 		
 		public void actionPerformed(ActionEvent event) {
+
+			String[] fields = clientInput.split(",");
+			String clientID = fields[0];
+			String clientName = fields[1];
+			String jobID = fields[2];
+			String jobDuration = fields[3];
+			String timestamp = fields[4]; 
+			int row1, row2;
+			Statement statement;
 			try {
-				String[] fields = clientInput.split(",");
-				String clientID = fields[0];
-				String clientName = fields[1];
-				String jobID = fields[2];
-				String jobDuration = fields[3];
-				String timestamp = fields[4]; 
 				String sql1 = String.format("INSERT INTO client (clientID, name)" + 
 						" VALUES ('%s', '%s')", clientID, clientName);
-				String sql2 = String.format("INSERT INTO job (jobID, duration, timeSubmitted, clientID)" + 
-						" VALUES ('%s', '%s', '%s', '%s')", jobID, jobDuration, timestamp, clientID);
-				Statement statement = connection.createStatement();
-				int row1, row2;
+				statement = connection.createStatement();
 				row1 = statement.executeUpdate(sql1);
 				if (row1 > 0) {
 					System.out.println("client data inserted");
-					row2 = statement.executeUpdate(sql2);
-					if (row2 > 0) {
-						System.out.println("job data inserted");
-						outputStream.writeUTF("job_confirmed");
-					}
-					else {
-						System.out.println("error inserting job data");
-					}
 				} 
 				else {
 					System.out.println("error inserting client data");
@@ -176,11 +177,36 @@ public class VCMFrame extends JFrame {
 //				output.append(clientInput + "\n");
 //				output.close();
 //				outputStream.writeUTF("job_confirmed");
+			}
+			catch (SQLIntegrityConstraintViolationException e) {
+				//Do nothing continue to insert job
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				statement = connection.createStatement();
+				String sql2 = String.format("INSERT INTO job (jobID, duration, timeSubmitted, clientID)" + 
+					" VALUES ('%s', '%s', '%s', '%s')", jobID, jobDuration, timestamp, clientID);
+				row2 = statement.executeUpdate(sql2);
+				if (row2 > 0) {
+					System.out.println("job data inserted");
+					outputStream.writeUTF("job_confirmed");
+					messageToVCM.setText("job confirmed");
+				}
+				else {
+					System.out.println("error inserting job data");
+				}
 				jobInfo.setText("");
+			}
+			catch (SQLIntegrityConstraintViolationException e) {
+				messageToVCM.setText("error: job ID already in use. please decline job");
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+
 		}
 	}
 	
@@ -188,6 +214,7 @@ public class VCMFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			try {
 				outputStream.writeUTF("job_declined");
+				messageToVCM.setText("job declined");
 				jobInfo.setText("");
 			}
 			catch (IOException e) {
@@ -202,30 +229,21 @@ public class VCMFrame extends JFrame {
 		PrintStream output;
 		
 		public void actionPerformed(ActionEvent event) {
+			String[] fields = ownerInput.split(",");
+			String ownerID = fields[0];
+			String ownerName = fields[1];
+			String vehicleID = fields[2];
+			String vehicleDuration = fields[3];
+			String timestamp = fields[4];
+			Statement statement;
+			int row1, row2;
 			try {
-				String[] fields = ownerInput.split(",");
-				String ownerID = fields[0];
-				String ownerName = fields[1];
-				String vehicleID = fields[2];
-				String vehicleDuration = fields[3];
-				String timestamp = fields[4]; 
 				String sql1 = String.format("INSERT INTO owner (ownerID, name)" + 
 						" VALUES ('%s', '%s')", ownerID, ownerName);
-				String sql2 = String.format("INSERT INTO vehicle (vehicleID, duration, timeSubmitted, ownerID)" + 
-						" VALUES ('%s', '%s', '%s', '%s')", vehicleID, vehicleDuration, timestamp, ownerID);
-				Statement statement = connection.createStatement();
-				int row1, row2;
+				statement = connection.createStatement();
 				row1 = statement.executeUpdate(sql1);
 				if (row1 > 0) {
 					System.out.println("owner data inserted");
-					row2 = statement.executeUpdate(sql2);
-					if (row2 > 0) {
-						System.out.println("vehicle data inserted");
-						outputStream.writeUTF("car_confirmed");
-					}
-					else {
-						System.out.println("error inserting vehicle data");
-					}
 				} 
 				else {
 					System.out.println("error inserting owner data");
@@ -234,7 +252,32 @@ public class VCMFrame extends JFrame {
 //				output.append(ownerInput + "\n");
 //				output.close();
 //				outputStream.writeUTF("car_confirmed");
+			}
+			catch (SQLIntegrityConstraintViolationException e) {
+				//DO nothing, continue with vehicle insert
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				String sql2 = String.format("INSERT INTO vehicle (vehicleID, duration, timeSubmitted, ownerID)" + 
+						" VALUES ('%s', '%s', '%s', '%s')", vehicleID, vehicleDuration, timestamp, ownerID);
+				statement = connection.createStatement();
+				row2 = statement.executeUpdate(sql2);
+				if (row2 > 0) {
+					System.out.println("vehicle data inserted");
+					messageToVCM.setText("vehicle confirmed");
+					outputStream.writeUTF("car_confirmed");
+				}
+				else {
+					System.out.println("error inserting vehicle data");
+					
+				}
 				carInfo.setText("");
+			}
+			catch (SQLIntegrityConstraintViolationException e) {
+				messageToVCM.setText("error: vehicle ID already in use. please decline vehicle");
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -246,6 +289,7 @@ public class VCMFrame extends JFrame {
 		public void actionPerformed(ActionEvent event) {
 			try {
 				outputStream.writeUTF("car_declined");
+				messageToVCM.setText("car declined");
 				carInfo.setText("");
 			}
 			catch (IOException e) {
