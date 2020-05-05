@@ -151,9 +151,9 @@ public class VCMFrame extends JFrame {
 				String jobID = fields[2];
 				String jobDuration = fields[3];
 				String timestamp = fields[4]; 
-				String sql1 = String.format("INSERT INTO client(ClientID, name)" + 
+				String sql1 = String.format("INSERT INTO client (ClientID, name)" + 
 						" VALUES (%s, %s)", clientID, clientName);
-				String sql2 = String.format("INSERT INTO job(JobID, duration, timeSubmitted, clientID)" + 
+				String sql2 = String.format("INSERT INTO job (JobID, duration, timeSubmitted, clientID)" + 
 						" VALUES (%s, %s, %s, %s)", jobID, jobDuration, timestamp, clientID);
 				Statement statement = connection.createStatement();
 				int row1, row2;
@@ -203,15 +203,15 @@ public class VCMFrame extends JFrame {
 		
 		public void actionPerformed(ActionEvent event) {
 			try {
-				String[] fields = clientInput.split(",");
+				String[] fields = ownerInput.split(",");
 				String ownerID = fields[0];
 				String ownerName = fields[1];
 				String vehicleID = fields[2];
 				String vehicleDuration = fields[3];
 				String timestamp = fields[4]; 
-				String sql1 = String.format("INSERT INTO owner(ownerID, name)" + 
+				String sql1 = String.format("INSERT INTO owner (ownerID, name)" + 
 						" VALUES (%s, %s)", ownerID, ownerName);
-				String sql2 = String.format("INSERT INTO vehicle(vehicleID, duration, timeSubmitted, ownerID)" + 
+				String sql2 = String.format("INSERT INTO vehicle (vehicleID, duration, timeSubmitted, ownerID)" + 
 						" VALUES (%s, %s, %s, %s)", vehicleID, vehicleDuration, timestamp, ownerID);
 				Statement statement = connection.createStatement();
 				int row1, row2;
