@@ -209,9 +209,9 @@ public class VCMFrame extends JFrame {
 				String vehicleID = fields[2];
 				String vehicleDuration = fields[3];
 				String timestamp = fields[4]; 
-				String sql1 = String.format("INSERT INTO client(ownerID, name)" + 
+				String sql1 = String.format("INSERT INTO owner(ownerID, name)" + 
 						" VALUES (%s, %s)", ownerID, ownerName);
-				String sql2 = String.format("INSERT INTO job(vehicleID, duration, timeSubmitted, ownerID)" + 
+				String sql2 = String.format("INSERT INTO vehicle(vehicleID, duration, timeSubmitted, ownerID)" + 
 						" VALUES (%s, %s, %s, %s)", vehicleID, vehicleDuration, timestamp, ownerID);
 				Statement statement = connection.createStatement();
 				int row1, row2;
