@@ -24,6 +24,8 @@ public class OwnerFrame extends JFrame {
 
 	private JLabel ownerIdLabel;
 	private JTextField ownerIdField;
+	private JLabel ownerNameLabel;
+	private JTextField ownerNameField;
 	private JLabel vehicleIdLabel;
 	private JTextField vehicleIdField;
 	private JLabel vehicleDurationLabel;
@@ -64,6 +66,8 @@ public class OwnerFrame extends JFrame {
 		final int FIELD_WIDTH = 10;
 		ownerIdLabel = new JLabel("Vehicle Owner ID: ");
 		ownerIdField = new JTextField(FIELD_WIDTH);
+		ownerNameLabel = new JLabel("Vehicle Owner Name: ");
+		ownerNameField = new JTextField(FIELD_WIDTH);
 		vehicleIdLabel = new JLabel("Vehicle ID: ");
 		vehicleIdField = new JTextField(FIELD_WIDTH);
 		vehicleDurationLabel = new JLabel("Vehicle Duration: ");
@@ -74,6 +78,7 @@ public class OwnerFrame extends JFrame {
 	
 	private void clearTextFields() {
 		ownerIdField.setText("");
+		ownerNameField.setText("");
 		vehicleIdField.setText("");
 		vehicleDurationField.setText("");
 	}
@@ -86,8 +91,9 @@ public class OwnerFrame extends JFrame {
 	class SubmitListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			try {
-				String carInfo = String.format("CAR:%s,%s,%s,%s",
+				String carInfo = String.format("CAR:%s,%s,%s,%s,%s",
 						ownerIdField.getText(),
+						ownerNameField.getText(),
 						 vehicleIdField.getText(),
 						 vehicleDurationField.getText(),
 						 new Timestamp(System.currentTimeMillis())
@@ -147,6 +153,8 @@ public class OwnerFrame extends JFrame {
 		JPanel panel = new JPanel(new GridLayout(0,1));
 		panel.add(ownerIdLabel);
 		panel.add(ownerIdField);
+		panel.add(ownerNameLabel);
+		panel.add(ownerNameField);
 		panel.add(vehicleIdLabel);
 		panel.add(vehicleIdField);
 		panel.add(vehicleDurationLabel);
